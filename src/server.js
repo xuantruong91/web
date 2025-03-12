@@ -41,6 +41,6 @@ app.use('/api', apiRoutes); // Định nghĩa đường dẫn API
 //routes
 app.use(webRoutes)
 
-app.listen(port, hostname, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
+  console.log(`Server is running on port ${process.env.PORT || 3000}`);
+});
