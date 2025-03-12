@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xuân Trường Page</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <!-- PWA app -->
+
+    <link rel="manifest" href="/manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(() => console.log("Service Worker registered"))
+                .catch(err => console.error("Service Worker failed", err));
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .topnav {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2e2699;
+            padding: 10px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .topnav .left-nav {
+            display: flex;
+            align-items: center;
+        }
+
+
+        .topnav a {
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        .topnav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .topnav a.active {
+            background-color: #2989c0;
+            color: white;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 100vh;
+            /* Chiều cao toàn màn hình */
+            margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            background-size: cover;
+            /* Giúp ảnh phủ kín */
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .slide-text {
+            position: absolute;
+            top: 25%;
+            /* Điều chỉnh vị trí gần giống ảnh mẫu */
+            left: 2%;
+            width: 45%;
+            /* Độ rộng của khung */
+            background: rgba(0, 0, 0, 0.6);
+            /* Làm mờ nền */
+            padding: 20px;
+            font-size: 32px;
+            /* Cỡ chữ lớn hơn */
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            border-radius: 8px;
+            /* Bo góc nhẹ */
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            /* Đổ bóng giống ảnh mẫu */
+        }
+
+
+
+
+        .info-section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            background: white;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topnav">
+        <div class="left-nav">
+            <a class="active" href="/">Home</a>
+            <a href="/create_user">Create Users</a>
+            <a href="/list">List User</a>
+            <a href="/data">DATA</a>
+            <a href="/hmi">HMI</a>
+        </div>
+    </div>
+
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" style="background-image: url('/images/1.jpeg');">
+                <div class="slide-text">Hệ thống PID </div>
+            </div>
+            <div class="swiper-slide" style="background-image: url('/images/2.jpg');">
+                <div class="slide-text">Sinh viên thực hiện: Xuân Trường</div>
+            </div>
+            <div class="swiper-slide" style="background-image: url('/images/3.jpeg');">
+                <div class="slide-text">ĐH BÁCH KHOA </div>
+            </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <div class="info-section" id="info">
+        <h2>HỆ THỐNG ĐIỀU KHIỂN NHIỆT ĐỘ VÀ ĐỘ pH CHO CÂY TRỒNG </h2>
+        <p>Sử dụng PID để điều khiển trong nhà kính</p>
+        <p>Chi tiết về dự án: Kiểm soát nhiệt độ và độ pH tự động nhằm tối ưu hóa điều kiện
+            phát triển của cây trồng.
+        </p>
+        <p>Lựa chọn loại cây xà lách,phổ biến khi trồng trong nhà kính,với thời gian thu hoạch nhanh tầm 24-30 ngày khi
+            trồng
+            bằng phương pháp khí canh.
+        </p>
+        <img src="/images/rau xà lách.jpg" alt="Hệ thống điều khiển"
+            style="max-width: 100%; height: auto; margin-top: 20px;">
+        <p>Phương pháp trồng: Sử dụng phương pháp trồng khí canh(Aero Hydroponics).
+            Mô hình ví dụ:
+        </p>
+        <img src="/images/Picture1.jpg" alt="Hệ thống điều khiển"
+            style="max-width: 100%; height: auto; margin-top: 20px;">
+    </div>
+
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            keyboard: {
+                enabled: true,
+                onlyInViewport: false,
+            },
+        });
+        document.addEventListener("scroll", function () {
+            var infoSection = document.getElementById("info");
+            var position = infoSection.getBoundingClientRect().top;
+            var windowHeight = window.innerHeight;
+            if (position < windowHeight - 50) {
+                infoSection.classList.add("visible");
+            }
+        });
+
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();  // Ngăn chặn hiển thị mặc định
+            deferredPrompt = e;
+
+            // Hiển thị nút tùy chỉnh cho người dùng
+            let installButton = document.createElement("button");
+            installButton.textContent = "Thêm vào màn hình chính";
+            installButton.style.position = "fixed";
+            installButton.style.bottom = "20px";
+            installButton.style.right = "20px";
+            installButton.style.padding = "10px 20px";
+            installButton.style.backgroundColor = "#007bff";
+            installButton.style.color = "white";
+            installButton.style.border = "none";
+            installButton.style.borderRadius = "5px";
+            document.body.appendChild(installButton);
+
+            installButton.addEventListener("click", () => {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === "accepted") {
+                        console.log("Người dùng đã thêm vào màn hình chính");
+                    } else {
+                        console.log("Người dùng từ chối");
+                    }
+                    deferredPrompt = null;
+                    installButton.style.display = "none";  // Ẩn nút sau khi click
+                });
+            });
+        });
+
+    </script>
+    <div class="footer"
+        style="background-color: #333; color: white; padding: 20px; text-align: left    ; margin-top: 20px;">
+
+        <h3>Liên hệ để biết thêm thông tin</h3>
+        <p><strong>Email người thực hiện 1:</strong> truong.nguyensinhvienbk91@hcmut.edu.vn</p>
+        <p><strong>Điện thoại:</strong> (84) 398617459</p>
+        <p><strong>Email Email người thực hiện 2:</strong> Huy.hong2710qhuy@hcmut.edu.vn</p>
+        <p><strong>Điện thoại:</strong> (84) 933968155</p>
+    </div>
+</body>
+
+</html>

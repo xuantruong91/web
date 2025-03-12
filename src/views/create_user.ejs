@@ -1,0 +1,45 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Users</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/create_user" class="active">Create Users</a>
+        <a href="/list">List User</a>
+        <a href="/data">DATA</a>
+    </div>
+    <div class="form">
+        <form action="/create-users" method="post"> <!--Action như routes,khi nhấn nút dẫn tới đg dẫn action-->
+
+            <fieldset>
+
+                <legend>New users:</legend>
+                <div class="input-group">
+                    <label>Tên đăng nhập: </label>
+                    <input type="text" name="username" /> <!--lệnh name dùng phân biệt các dữ liệu khác nhau-->
+                </div>
+                <div class="input-group">
+                    <label>Email: </label>
+                    <input type="text" name="Email" />
+                </div>
+                <div class="input-group">
+                    <label>Mật khẩu: </label>
+                    <input type="text" name="password" />
+                </div>
+                <div>
+                    <button> Save </button>
+                </div>
+
+            </fieldset>
+
+        </form>
+    </div>
+</body>
+
+</html>

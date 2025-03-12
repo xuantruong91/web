@@ -1,0 +1,266 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATA</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+</head>
+<style>
+    .table-container {
+        width: 100%;
+        background: white;
+        padding: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    th,
+    td {
+        padding: 5px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #171817;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+
+<body>
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/create_user">Create Users</a>
+        <a href="/list">List User</a>
+        <a href="/data" class="active">DATA</a>
+    </div>
+    <div class="topbar">
+        <input type="text" id="search-input" placeholder="Tìm kiếm dữ liệu..." onkeyup="filterTable()">
+        <button class="export-button" onclick="exportToExcel()">Xuất Excel</button>
+    </div>
+
+    <div class="table-container">
+        <div class="title">BẢNG DỮ LIỆU</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Time</th>
+                    <th>data_int</th>
+                    <th>data_real</th>
+                </tr>
+            </thead>
+            <tbody id="data-table">
+                <!-- Dữ liệu sẽ được tải từ API -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let isFiltering = false; // Biến để kiểm tra có đang tìm kiếm không
+
+        async function fetchData() {
+            if (isFiltering) return; // Nếu đang tìm kiếm thì không cập nhật dữ liệu mới
+
+            try {
+                let response = await fetch('/api/data?' + new Date().getTime()); // Tránh cache dữ liệu cũ
+                let jsonData = await response.json();
+
+                let tableBody = document.getElementById("data-table");
+                tableBody.innerHTML = ""; // Xóa dữ liệu cũ trước khi cập nhật
+
+                jsonData.data.forEach(test => {
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                <td>${test.id}</td>
+                <td>${test.time}</td>
+                <td>${test.data_int}</td>
+                <td>${test.data_real}</td>
+            `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+            }
+        }
+
+        function filterTable() {
+            let input = document.getElementById("search-input").value.toLowerCase();
+            let rows = document.querySelectorAll("#data-table tr");
+
+            isFiltering = input.length > 0; // Nếu có nội dung tìm kiếm thì dừng cập nhật API
+
+            rows.forEach(row => {
+                let cells = row.getElementsByTagName("td");
+                let match = false;
+
+                for (let cell of cells) {
+                    let text = cell.textContent.toLowerCase();
+
+                    if (/\d{1,2}-\d{1,2}-\d{4}/.test(input)) {
+                        let dateCell = new Date(cells[1].textContent).toLocaleDateString('en-GB'); // Chuyển sang DD-MM-YYYY
+                        if (dateCell.includes(input)) {
+                            match = true;
+                            break;
+                        }
+                    } else if (text.includes(input)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                row.style.display = match ? "" : "none";
+            });
+        }
+
+        // Kiểm tra khi người dùng xóa ô tìm kiếm, tiếp tục cập nhật API
+        document.getElementById("search-input").addEventListener("input", function () {
+            if (this.value.length === 0) {
+                isFiltering = false;
+                fetchData(); // Gọi lại API khi ô tìm kiếm rỗng
+            }
+        });
+        async function exportToExcel() {
+            try {
+                console.log("🔍 Đang tải file mẫu...");
+                let response = await fetch("/template/template.xls"); // Đường dẫn file mẫu
+
+                if (!response.ok) throw new Error("❌ Không tìm thấy file mẫu!");
+
+                let arrayBuffer = await response.arrayBuffer();
+                console.log("✅ File mẫu tải thành công!");
+
+                let wb = XLSX.read(arrayBuffer, { type: "array" });
+                let ws = wb.Sheets["Sheet1"]; // Chọn sheet để ghi dữ liệu
+
+                let table = document.getElementById("data-table");
+                let rows = table.querySelectorAll("tr");
+                let searchValue = document.getElementById("search-input").value.trim();
+
+                let dataToExport = [];
+
+                if (searchValue === "") {
+                    // 👉 Nếu không tìm kiếm, lấy toàn bộ dữ liệu từ API
+                    console.log("🌍 Lấy toàn bộ dữ liệu từ API...");
+                    let apiResponse = await fetch('/api/data'); // Gọi API lấy dữ liệu
+                    let jsonData = await apiResponse.json();
+
+                    dataToExport = jsonData.data.map(test => [
+                        test.id,
+                        test.time,
+                        test.data_int,
+                        test.data_real
+                    ]);
+
+                } else {
+                    // 👉 Nếu đang tìm kiếm, chỉ lấy dữ liệu đang hiển thị trên bảng
+                    console.log("🔍 Xuất dữ liệu đang hiển thị...");
+                    rows.forEach(row => {
+                        if (row.style.display !== "none") { // Chỉ lấy dòng đang hiển thị
+                            let cells = row.querySelectorAll("td");
+                            let rowData = Array.from(cells, cell => cell.textContent);
+                            dataToExport.push(rowData);
+                        }
+                    });
+                }
+
+                // Ghi dữ liệu vào Excel từ dòng thứ 8
+                let rowIndex = 8;
+                dataToExport.forEach(rowData => {
+                    rowData.forEach((cellData, colIndex) => {
+                        let cellRef = XLSX.utils.encode_cell({ r: rowIndex, c: colIndex });
+                        ws[cellRef] = { v: cellData };
+                    });
+                    rowIndex++;
+                });
+
+                console.log("📁 Đang ghi file Excel...");
+                XLSX.writeFile(wb, "data.xlsx");
+                console.log("✅ File Excel đã được xuất!");
+
+            } catch (error) {
+                console.error("❌ Lỗi khi xuất file Excel:", error);
+            }
+        }
+        // Thêm nút "Gửi Email" bên cạnh nút "Xuất Excel"
+        document.querySelector(".topbar").innerHTML += '<button class="email-button" onclick="openEmailPopup()">Gửi Email</button>';
+
+        document.body.innerHTML += `
+<div id="email-popup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close" onclick="closeEmailPopup()">&times;</span>
+        <h3>Nhập Email</h3>
+        <input type="email" id="email-input" placeholder="Nhập email" required>
+        <button onclick="sendEmail()">Gửi</button>
+    </div>
+</div>
+<style>
+    .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 10px; z-index: 1000; }
+    .popup-content { text-align: center; }
+    .close { cursor: pointer; float: right; }
+</style>`;
+
+        function openEmailPopup() {
+            document.getElementById("email-popup").style.display = "block";
+        }
+
+        function closeEmailPopup() {
+            document.getElementById("email-popup").style.display = "none";
+        }
+
+        async function sendEmail() {
+            let email = document.getElementById("email-input").value;
+            if (!email) return alert("⚠️ Vui lòng nhập email!");
+
+            let dataToSend = [];
+            document.querySelectorAll("#data-table tr").forEach(row => {
+                if (row.style.display !== "none") {
+                    let cells = row.querySelectorAll("td");
+                    let rowData = Array.from(cells, cell => cell.textContent);
+                    dataToSend.push(rowData);
+                }
+            });
+
+            try {
+                let response = await fetch("/api/send-email", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, data: dataToSend }),
+                });
+
+                let result = await response.json();
+                alert(result.message);
+                closeEmailPopup();
+
+            } catch (error) {
+                console.error("❌ Lỗi khi gửi email:", error);
+                alert("❌ Lỗi gửi email! Vui lòng thử lại.");
+            }
+        }
+
+
+
+
+
+        setInterval(fetchData, 5000); // Tự động cập nhật mỗi 5 giây
+        fetchData(); // Gọi ngay khi tải trang
+
+
+
+    </script>
+</body>
+
+</html>

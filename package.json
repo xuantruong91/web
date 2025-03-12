@@ -1,0 +1,32 @@
+{
+  "name": "backend0",
+  "version": "1.0.0",
+  "description": "Nguyen Xuan Truong",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./src/server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "react"
+  ],
+  "author": "Nguyen Xuan Truong",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "16.4.7",
+    "ejs": "3.1.10",
+    "excel4node": "^1.8.2",
+    "express": "4.21.2",
+    "fs": "^0.0.1-security",
+    "mysql2": "3.12.0",
+    "nodemailer": "^6.10.0",
+    "path": "^0.12.7",
+    "ws": "^8.18.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "3.1.9"
+  }
+}

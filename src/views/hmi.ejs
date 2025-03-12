@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMI Web</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            width: 50px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .motor,
+        .tank {
+            margin: 20px;
+        }
+
+        .motor img,
+        .tank img {
+            width: 100px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #2e2699;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #1e1a75;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Ô nhập số -->
+        <div class="input-group">
+            <label>Int:</label>
+            <input type="number" id="intValue" value="0">
+        </div>
+        <div class="input-group">
+            <label>Real:</label>
+            <input type="number" id="realValue" value="0" step="0.01">
+        </div>
+
+        <!-- Động cơ -->
+        <div class="motor">
+            <img id="motorImage" src="/images/motor.jpg" alt="Motor">
+        </div>
+
+        <!-- Bồn chứa -->
+        <div class="tank">
+            <img src="/images/tank.jpg" alt="Tank">
+        </div>
+
+        <!-- Nút nhấn -->
+        <button class="button" id="toggleMotor">ON</button>
+    </div>
+
+    <script>
+        let motorState = false;
+
+        document.getElementById("toggleMotor").addEventListener("click", function () {
+            motorState = !motorState;
+            document.getElementById("motorImage").src = motorState ? "/images/motor_on.png" : "/images/motor_off.png";
+            document.getElementById("toggleMotor").innerText = motorState ? "Tắt Motor" : "Bật Motor";
+
+            // Gửi dữ liệu lên server để cập nhật PLC
+            fetch("/updateMotor", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ motorState })
+            });
+        });
+    </script>
+
+</body>
+
+</html>

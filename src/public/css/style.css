@@ -1,0 +1,127 @@
+.title {
+    font-size: 25px;
+    font-weight: 600;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.background-image {
+    width: 80%;
+    /* Điều chỉnh kích thước ảnh theo nhu cầu */
+    max-width: 200px;
+    border-radius: 50px;
+}
+
+.text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+.image-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.image-container img {
+    width: 80%;
+    /* Điều chỉnh kích thước ảnh theo nhu cầu */
+    max-width: 400px;
+    border-radius: 50px;
+}
+
+/* Add a black background color to the top navigation */
+.topnav {
+    display: flex;
+    justify-content: center;
+    background-color: #2e2699;
+    padding: 10px 0;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+    background-color: #1385c7;
+    color: white;
+}
+
+/*form*/
+
+.form {
+    width: 500px;
+    margin: 0 auto;
+    padding-top: 100px;
+}
+
+.input-group {
+    padding: 10px;
+}
+
+button {
+    margin: 10px;
+    cursor: pointer;
+}
+
+.non {
+    display: none;
+}
+
+.search-container {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#search-input {
+    width: 30%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f8f9fa;
+}
+
+.export-button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.export-button:hover {
+    background-color: #0056b3;
+}
+
+.bottom-bar {
+    text-align: center;
+    margin-top: 10px;
+}

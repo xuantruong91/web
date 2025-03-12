@@ -1,0 +1,122 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Users</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<style>
+    .table-container {
+        width: 100%;
+        background: white;
+        padding: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+
+
+    }
+
+    th,
+    td {
+        padding: 1px;
+        border-bottom: 1px solid #ddd;
+
+    }
+
+    th {
+        background-color: #171817;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+
+<body>
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/create_user">Create Users</a>
+        <a href="/list" class="active">List User</a>
+        <a href="/data">DATA</a>
+    </div>
+
+    <div class="table-container">
+
+        <div class="title">BẢNG DỮ LIỆU</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên đăng nhập</th>
+                    <th>Email</th>
+                    <th>Mật khẩu</th>
+                    <th>Actions </th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <!-- <% for (let i=0; i < listuser.length; i++) { %>
+                    <tr>
+                        <td>
+                            <%= listuser[i].id%>
+                        </td>
+                        <td>
+                            <%=listuser[i].name %>
+                        </td>
+                        <td>
+                            <%=listuser[i].email %>
+                        </td>
+                        <td>
+                            <%=listuser[i].city %>
+                        </td>
+                        <td>
+                            <button>Edit</button>
+                            <button>Delete</button>
+                        </td>
+
+                    </tr>
+                    <% } %> -->
+
+                <% listuser.forEach(function(users) { %>
+                    <tr>
+                        <td>
+                            <%= users.id%>
+                        </td>
+                        <td>
+                            <%=users.username %>
+                        </td>
+                        <td>
+                            <%=users.email %>
+                        </td>
+                        <td>
+                            <%=users.password %>
+                        </td>
+                        <td>
+                            <form action="/edit/<%= users.id%>" method="get">
+                                <button>Edit</button>
+                            </form>
+                            <form action="/Delete/<%= users.id%>" method="post">
+                                <button>Delete</button>
+                            </form>
+
+                        </td>
+
+                    </tr>
+                    <% }); %>
+
+
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
