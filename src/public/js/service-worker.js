@@ -29,12 +29,20 @@ self.addEventListener("install", event => {
 
 // Lấy dữ liệu từ cache khi offline
 self.addEventListener("fetch", event => {
+    console.log("Fetching:", event.request.url);
     event.respondWith(
         caches.match(event.request)
-            .then(response => response || fetch(event.request))
-            .catch(() => caches.match("/offline.html")) // Hiển thị trang offline nếu không có mạng
+            .then(response => {
+                console.log("Cache hit:", response);
+                return response || fetch(event.request);
+            })
+            .catch(() => {
+                console.warn("Offline! Serving offline.html");
+                return caches.match("/offline.html");
+            })
     );
 });
+
 
 // Xóa cache cũ khi cập nhật service worker
 self.addEventListener("activate", event => {
