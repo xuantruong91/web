@@ -8,7 +8,7 @@ const urlsToCache = [
     "/images/rau%20xà%20lách.jpg",
     "/images/Picture1.jpg",
     "/images/logo.jpg",
-    "/manifest.json"
+    "/js/manifest.json"
 ];
 
 // Caching tài nguyên khi install
