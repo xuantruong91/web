@@ -19,6 +19,7 @@ self.addEventListener("install", event => {
             try {
                 console.log("Caching resources...");
                 await cache.addAll(urlsToCache);
+                console.log("Resources cached successfully!");
             } catch (err) {
                 console.error("Cache failed", err);
             }
