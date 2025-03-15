@@ -1,4 +1,4 @@
-const CACHE_NAME = "xuân-trường-cache-v2";  // Cập nhật tên cache để force reload
+const CACHE_NAME = "xuân-trường-cache-v3";  // Cập nhật version để force reload
 const urlsToCache = [
     "/",
     "/css/style.css",
@@ -8,18 +8,21 @@ const urlsToCache = [
     "/images/rau%20xà%20lách.jpg",
     "/images/Picture1.jpg",
     "/images/logo.jpg",
-    "/manifest.json"  // Đảm bảo đúng đường dẫn, có thể bỏ `/js/`
+    "/manifest.json",   // Đảm bảo đúng đường dẫn
+    "/favicon.ico"      // Thêm favicon để tránh lỗi 404
 ];
 
 // Caching tài nguyên khi install
 self.addEventListener("install", event => {
     event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log("Caching resources");
-                return cache.addAll(urlsToCache);
-            })
-            .catch(err => console.error("Cache failed", err))
+        caches.open(CACHE_NAME).then(async cache => {
+            try {
+                console.log("Caching resources...");
+                await cache.addAll(urlsToCache);
+            } catch (err) {
+                console.error("Cache failed", err);
+            }
+        })
     );
 });
 
@@ -27,16 +30,8 @@ self.addEventListener("install", event => {
 self.addEventListener("fetch", event => {
     event.respondWith(
         caches.match(event.request)
-            .then(response => {
-                return response || fetch(event.request)
-                    .then(networkResponse => {
-                        if (!networkResponse || networkResponse.status !== 200) {
-                            throw new Error("Fetch failed");
-                        }
-                        return networkResponse;
-                    });
-            })
-            .catch(() => caches.match("/offline.html"))  // Trả về file offline nếu không có mạng
+            .then(response => response || fetch(event.request))
+            .catch(() => caches.match("/offline.html")) // Hiển thị trang offline nếu không có mạng
     );
 });
 
