@@ -9,7 +9,8 @@ const urlsToCache = [
     "/images/Picture1.jpg",
     "/images/logo.jpg",
     "/manifest.json",   // Đảm bảo đúng đường dẫn
-    "/favicon.ico"      // Thêm favicon để tránh lỗi 404
+    "/favicon.ico",   // Thêm favicon để tránh lỗi 404
+    "/offline.html"
 ];
 
 // Caching tài nguyên khi install
