@@ -1,4 +1,4 @@
-const CACHE_NAME = "xuân-trường-cache-v1";
+const CACHE_NAME = "xuân-trường-cache-v2";  // Cập nhật tên cache để force reload
 const urlsToCache = [
     "/",
     "/css/style.css",
@@ -8,7 +8,7 @@ const urlsToCache = [
     "/images/rau%20xà%20lách.jpg",
     "/images/Picture1.jpg",
     "/images/logo.jpg",
-    "/js/manifest.json"
+    "/manifest.json"  // Đảm bảo đúng đường dẫn, có thể bỏ `/js/`
 ];
 
 // Caching tài nguyên khi install
@@ -28,9 +28,15 @@ self.addEventListener("fetch", event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
-                return response || fetch(event.request);
+                return response || fetch(event.request)
+                    .then(networkResponse => {
+                        if (!networkResponse || networkResponse.status !== 200) {
+                            throw new Error("Fetch failed");
+                        }
+                        return networkResponse;
+                    });
             })
-            .catch(() => new Response("Không có kết nối internet", { status: 503 }))
+            .catch(() => caches.match("/offline.html"))  // Trả về file offline nếu không có mạng
     );
 });
 
