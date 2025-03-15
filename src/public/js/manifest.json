@@ -3,6 +3,7 @@
     "short_name": "PLCControll",
     "start_url": "/",
     "display": "standalone",
+    "scope": "/",
     "background_color": "#ffffff",
     "theme_color": "#007bff",
     "icons": [
