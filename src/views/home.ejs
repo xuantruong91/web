@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <!-- PWA app -->
+
     <link rel="manifest" href="/js/manifest.json">
     <script>
         if ('serviceWorker' in navigator) {
@@ -16,6 +18,7 @@
                 .catch(err => console.error("Service Worker failed", err));
         }
     </script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,6 +45,7 @@
             align-items: center;
         }
 
+
         .topnav a {
             color: white;
             text-align: center;
@@ -63,6 +67,7 @@
         .swiper-container {
             width: 100%;
             height: 100vh;
+            /* Chiều cao toàn màn hình */
             margin: 0;
             position: relative;
             overflow: hidden;
@@ -77,25 +82,34 @@
             color: white;
             text-align: center;
             background-size: cover;
+            /* Giúp ảnh phủ kín */
             background-position: center;
             background-repeat: no-repeat;
-            transition: transform 0.5s ease-in-out;
         }
 
         .slide-text {
             position: absolute;
             top: 25%;
+            /* Điều chỉnh vị trí gần giống ảnh mẫu */
             left: 2%;
             width: 45%;
+            /* Độ rộng của khung */
             background: rgba(0, 0, 0, 0.6);
+            /* Làm mờ nền */
             padding: 20px;
             font-size: 32px;
+            /* Cỡ chữ lớn hơn */
             font-weight: bold;
             color: #fff;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             border-radius: 8px;
+            /* Bo góc nhẹ */
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+            /* Đổ bóng giống ảnh mẫu */
         }
+
+
+
 
         .info-section {
             opacity: 0;
@@ -110,63 +124,6 @@
         .info-section.visible {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .footer {
-            background-color: #333;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .footer h3 {
-            margin-bottom: 10px;
-        }
-
-        .footer p {
-            margin: 5px 0;
-        }
-
-        @media (max-width: 768px) {
-            .topnav {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .topnav a {
-                padding: 10px;
-                font-size: 14px;
-            }
-
-            .slide-text {
-                width: 80%;
-                font-size: 24px;
-                top: 20%;
-            }
-
-            .info-section {
-                padding: 20px;
-            }
-
-            .footer {
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .slide-text {
-                font-size: 18px;
-                top: 15%;
-            }
-
-            .info-section h2 {
-                font-size: 20px;
-            }
-
-            .info-section p {
-                font-size: 14px;
-            }
         }
     </style>
 </head>
@@ -208,12 +165,12 @@
             trồng
             bằng phương pháp khí canh.
         </p>
-        <img src="/images/rau xà lách.jpg" alt="Hệ thống điều khiển" loading="lazy"
+        <img src="/images/rau xà lách.jpg" alt="Hệ thống điều khiển"
             style="max-width: 100%; height: auto; margin-top: 20px;">
         <p>Phương pháp trồng: Sử dụng phương pháp trồng khí canh(Aero Hydroponics).
             Mô hình ví dụ:
         </p>
-        <img src="/images/Picture1.jpg" alt="Hệ thống điều khiển" loading="lazy"
+        <img src="/images/Picture1.jpg" alt="Hệ thống điều khiển"
             style="max-width: 100%; height: auto; margin-top: 20px;">
     </div>
 
@@ -245,9 +202,10 @@
         let deferredPrompt;
 
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
+            e.preventDefault();  // Ngăn chặn hiển thị mặc định
             deferredPrompt = e;
 
+            // Hiển thị nút tùy chỉnh cho người dùng
             let installButton = document.createElement("button");
             installButton.textContent = "Thêm vào màn hình chính";
             installButton.style.position = "fixed";
@@ -269,12 +227,15 @@
                         console.log("Người dùng từ chối");
                     }
                     deferredPrompt = null;
-                    installButton.style.display = "none";
+                    installButton.style.display = "none";  // Ẩn nút sau khi click
                 });
             });
         });
+
     </script>
-    <div class="footer">
+    <div class="footer"
+        style="background-color: #333; color: white; padding: 20px; text-align: left    ; margin-top: 20px;">
+
         <h3>Liên hệ để biết thêm thông tin</h3>
         <p><strong>Email người thực hiện 1:</strong> truong.nguyensinhvienbk91@hcmut.edu.vn</p>
         <p><strong>Điện thoại:</strong> (84) 398617459</p>
