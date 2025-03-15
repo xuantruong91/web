@@ -40,6 +40,14 @@ const apiRoutes = require('./routes/api'); // Import file API
 app.use('/api', apiRoutes); // Định nghĩa đường dẫn API
 //routes
 app.use(webRoutes)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/js/service-worker.js")
+      .then(reg => console.log("Service Worker registered:", reg))
+      .catch(err => console.log("Service Worker registration failed:", err));
+  });
+}
+
 
 app.listen(process.env.PORT || 3000, '0.0.0.0', () => {
   console.log(`Server is running on port ${process.env.PORT || 3000}`);
