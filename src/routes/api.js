@@ -32,7 +32,7 @@ router.post('/send-email', async (req, res) => {
 
         // Tạo Workbook và Worksheet từ dữ liệu
         const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.aoa_to_sheet([["ID", "Time", "Data Int", "Data Real"], ...data]);
+        const ws = XLSX.utils.aoa_to_sheet([["ID", "Time", "Nồng độ EC", "Nồng độ pH"], ...data]);
         XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 
         // Lưu file Excel tạm thời
