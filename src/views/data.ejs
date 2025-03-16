@@ -59,8 +59,8 @@
                 <tr>
                     <th>ID</th>
                     <th>Time</th>
-                    <th>data_int</th>
-                    <th>data_real</th>
+                    <th>Nồng độ EC</th>
+                    <th>Nồng độ pH</th>
                 </tr>
             </thead>
             <tbody id="data-table">
@@ -85,10 +85,10 @@
                 jsonData.data.forEach(test => {
                     let row = document.createElement("tr");
                     row.innerHTML = `
-                <td>${test.id}</td>
-                <td>${test.time}</td>
-                <td>${test.data_int}</td>
-                <td>${test.data_real}</td>
+                <td>${control_EC_pH.ID}</td>
+                <td>${control_EC_pH.Time}</td>
+                <td>${control_EC_pH.Nồng_độ_EC}</td>
+                <td>${control_EC_pH.Nồng_độ_pH}</td>
             `;
                     tableBody.appendChild(row);
                 });
@@ -110,7 +110,7 @@
                 for (let cell of cells) {
                     let text = cell.textContent.toLowerCase();
 
-                    if (/\d{1,2}-\d{1,2}-\d{4}/.test(input)) {
+                    if (/\d{1,2}-\d{1,2}-\d{4}/.control_EC_pH(input)) {
                         let dateCell = new Date(cells[1].textContent).toLocaleDateString('en-GB'); // Chuyển sang DD-MM-YYYY
                         if (dateCell.includes(input)) {
                             match = true;
@@ -159,10 +159,10 @@
                     let jsonData = await apiResponse.json();
 
                     dataToExport = jsonData.data.map(test => [
-                        test.id,
-                        test.time,
-                        test.data_int,
-                        test.data_real
+                        control_EC_pH.ID,
+                        control_EC_pH.Time,
+                        control_EC_pH.Nồng_độ_EC,
+                        control_EC_pH.Nồng_độ_pH
                     ]);
 
                 } else {

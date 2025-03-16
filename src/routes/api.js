@@ -8,7 +8,7 @@ const path = require("path");
 
 router.get('/data', async (req, res) => {
     try {
-        const [rows] = await connection.query('SELECT * FROM test ORDER BY id DESC');
+        const [rows] = await connection.query('SELECT * FROM control_EC_pH ORDER BY id DESC');
         res.json({ data: rows, timestamp: new Date().getTime() }); // Thêm timestamp để tránh cache
     } catch (error) {
         console.error("Lỗi khi lấy dữ liệu từ MySQL:", error);

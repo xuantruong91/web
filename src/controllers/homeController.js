@@ -93,7 +93,7 @@ const PostLogin = async (req, res) => {
 
 
 const PLC_data = async (req, res) => {
-    let [result, fields] = await connection.query('select * from test');
+    let [result, fields] = await connection.query('select * from control_EC_pH');
     return res.render('data.ejs', { data: result })
 }
 const PLC_HMI = async (req, res) => {
