@@ -36,6 +36,8 @@
     <div class="topbar">
         <input type="text" id="search-input" placeholder="Tìm kiếm dữ liệu..." onkeyup="filterTable()">
         <button class="export-button" onclick="exportToExcel()">Xuất Excel</button>
+        <button class="clear-button" onclick="clearTable()">Xóa Dữ Liệu</button>
+
     </div>
 
 
@@ -63,6 +65,11 @@
     </div>
 
     <script>
+        function clearTable() {
+            let tableBody = document.getElementById("data-table");
+            tableBody.innerHTML = ""; // Xóa toàn bộ dữ liệu trong bảng
+        }
+
         let isFiltering = false; // Biến để kiểm tra có đang tìm kiếm không
 
         async function fetchData() {
@@ -78,11 +85,11 @@
                 jsonData.data.forEach(control_EC_pH => {
                     let row = document.createElement("tr");
                     row.innerHTML = `
-                <td>${control_EC_pH.ID}</td>
-                <td>${control_EC_pH.Time}</td>
-                <td>${control_EC_pH.Nồng_độ_EC}</td>
-                <td>${control_EC_pH.Nồng_độ_pH}</td>
-            `;
+                    <td>${control_EC_pH.ID}</td>
+                    <td>${control_EC_pH.Time}</td>
+                    <td>${control_EC_pH.Nồng_độ_EC}</td>
+                    <td>${control_EC_pH.Nồng_độ_pH}</td>
+                `;
                     tableBody.appendChild(row);
                 });
             } catch (error) {
@@ -192,19 +199,19 @@
         document.querySelector(".topbar").innerHTML += '<button class="email-button" onclick="openEmailPopup()">Gửi Email</button>';
 
         document.body.innerHTML += `
-<div id="email-popup" class="popup" style="display: none;">
-    <div class="popup-content">
-        <span class="close" onclick="closeEmailPopup()">&times;</span>
-        <h3>Nhập Email</h3>
-        <input type="email" id="email-input" placeholder="Nhập email" required>
-        <button onclick="sendEmail()">Gửi</button>
+    <div id="email-popup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <span class="close" onclick="closeEmailPopup()">&times;</span>
+            <h3>Nhập Email</h3>
+            <input type="email" id="email-input" placeholder="Nhập email" required>
+            <button onclick="sendEmail()">Gửi</button>
+        </div>
     </div>
-</div>
-<style>
-    .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 10px; z-index: 1000; }
-    .popup-content { text-align: center; }
-    .close { cursor: pointer; float: right; }
-</style>`;
+    <style>
+        .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 10px; z-index: 1000; }
+        .popup-content { text-align: center; }
+        .close { cursor: pointer; float: right; }
+    </style>`;
 
         function openEmailPopup() {
             document.getElementById("email-popup").style.display = "block";
@@ -267,11 +274,11 @@
                 rawData.forEach(control_EC_pH => { // Dữ liệu bảng giữ nguyên
                     let row = document.createElement("tr");
                     row.innerHTML = `
-                <td>${control_EC_pH.ID}</td>
-                <td>${control_EC_pH.Time}</td>
-                <td>${control_EC_pH.Nồng_độ_EC}</td>
-                <td>${control_EC_pH.Nồng_độ_pH}</td>
-            `;
+                    <td>${control_EC_pH.ID}</td>
+                    <td>${control_EC_pH.Time}</td>
+                    <td>${control_EC_pH.Nồng_độ_EC}</td>
+                    <td>${control_EC_pH.Nồng_độ_pH}</td>
+                `;
                     tableBody.appendChild(row);
                 });
 
