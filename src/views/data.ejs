@@ -83,7 +83,8 @@
                 console.error("Lỗi khi xóa dữ liệu:", error);
                 alert("❌ Lỗi khi xóa dữ liệu!");
             }
-
+        }
+        function clearChart() {
             if (trendChart) {
                 trendChart.data.labels = [];
                 trendChart.data.datasets.forEach(dataset => dataset.data = []);
