@@ -6,6 +6,7 @@
     <title>DATA</title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <style>
@@ -50,6 +51,11 @@
     <div class="topbar">
         <input type="text" id="search-input" placeholder="Tìm kiếm dữ liệu..." onkeyup="filterTable()">
         <button class="export-button" onclick="exportToExcel()">Xuất Excel</button>
+    </div>
+
+    <div class="chart-container">
+        <div class="title">BIỂU ĐỒ XU HƯỚNG</div>
+        <canvas id="trend-chart"></canvas>
     </div>
 
     <div class="table-container">
@@ -249,6 +255,92 @@
                 console.error("❌ Lỗi khi gửi email:", error);
                 alert("❌ Lỗi gửi email! Vui lòng thử lại.");
             }
+        }
+
+        let trendChart;
+
+        async function fetchData() {
+            if (isFiltering) return;
+
+            try {
+                let response = await fetch('/api/data?' + new Date().getTime());
+                let jsonData = await response.json();
+
+                let tableBody = document.getElementById("data-table");
+                tableBody.innerHTML = "";
+
+                let ecData = []; // Dữ liệu Nồng độ EC
+                let phData = []; // Dữ liệu Nồng độ pH
+                let labels = []; // Nhãn thời gian
+
+                jsonData.data.forEach(control_EC_pH => {
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                <td>${control_EC_pH.ID}</td>
+                <td>${control_EC_pH.Time}</td>
+                <td>${control_EC_pH.Nồng_độ_EC}</td>
+                <td>${control_EC_pH.Nồng_độ_pH}</td>
+            `;
+                    tableBody.appendChild(row);
+
+                    // Lưu dữ liệu cho biểu đồ
+                    ecData.push(control_EC_pH.Nồng_độ_EC);
+                    phData.push(control_EC_pH.Nồng_độ_pH);
+                    labels.push(control_EC_pH.Time);
+                });
+
+                // Vẽ biểu đồ
+                updateChart(labels, ecData, phData);
+
+            } catch (error) {
+                console.error("Lỗi khi lấy dữ liệu:", error);
+            }
+        }
+
+        function updateChart(labels, ecData, phData) {
+            let ctx = document.getElementById("trend-chart").getContext("2d");
+
+            // Nếu biểu đồ đã tồn tại, cập nhật dữ liệu
+            if (trendChart) {
+                trendChart.data.labels = labels;
+                trendChart.data.datasets[0].data = ecData;
+                trendChart.data.datasets[1].data = phData;
+                trendChart.update();
+                return;
+            }
+
+            // Nếu biểu đồ chưa tồn tại, tạo mới
+            trendChart = new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Nồng độ EC",
+                            data: ecData,
+                            borderColor: "rgba(75, 192, 192, 1)",
+                            backgroundColor: "rgba(75, 192, 192, 0.2)",
+                            borderWidth: 2,
+                        },
+                        {
+                            label: "Nồng độ pH",
+                            data: phData,
+                            borderColor: "rgba(255, 99, 132, 1)",
+                            backgroundColor: "rgba(255, 99, 132, 0.2)",
+                            borderWidth: 2,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
         }
 
 
