@@ -5,95 +5,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SCADA Web</title>
-    <style>
-        body {
-            text-align: center;
-        }
-
-        .container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .scada-image {
-            width: 800px;
-            /* Điều chỉnh theo kích thước ảnh SCADA */
-        }
-
-        .button {
-            position: absolute;
-            width: 50px;
-            height: 25px;
-            background-color: red;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .switch {
-            position: absolute;
-            width: 50px;
-            height: 25px;
-            background-color: gray;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .on {
-            background-color: green;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-
-        .topnav {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #2e2699;
-            padding: 10px 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-        }
-
-        .topnav .left-nav {
-            display: flex;
-            align-items: center;
-        }
-
-
-        .topnav a {
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-            font-size: 17px;
-        }
-
-        .topnav a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        .topnav a.active {
-            background-color: #2989c0;
-            color: white;
-        }
-    </style>
-
+    <link rel="stylesheet" href="styles.css">
 </head>
+<style>
+    /* Reset mặc định */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        text-align: center;
+    }
+
+    /* Thanh điều hướng */
+    .topnav {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        background-color: #2e2699;
+        padding: 10px 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+    }
+
+    .topnav a {
+        color: white;
+        text-align: center;
+        padding: 14px 20px;
+        text-decoration: none;
+        font-size: 17px;
+    }
+
+    .topnav a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .topnav a.active {
+        background-color: #2989c0;
+    }
+
+    /* Bố cục chính: Bảng - HMI - Nút điều khiển */
+    .main-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 100px 20px 20px;
+        gap: 20px;
+    }
+
+    /* Bảng trạng thái */
+    .table-container {
+        width: 25%;
+        background: white;
+        padding: 15px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        text-align: left;
+    }
+
+    .table-container h3 {
+        text-align: center; 
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #171817;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Khu vực HMI */
+    .hmi-container {
+        width: 50%;
+    }
+
+    .scada-image {
+        width: 100%;
+        max-width: 500px;
+        border-radius: 10px;
+    }
+
+    /* Khu vực nút điều khiển */
+    .controls-container {
+        width: 25%;
+        background: white;
+        padding: 15px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .controls-container h3 {
+        text-align: center;
+    }
+
+    .switch {
+        display: block;
+        width: 100px;
+        height: 40px;
+        margin: 10px auto;
+        background-color: gray;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        border-radius: 5px;
+    }
+
+    .switch.on {
+        background-color: green;
+    }
+</style>
 
 <body>
+
+    <!-- Thanh điều hướng -->
     <div class="topnav">
         <div class="left-nav">
             <a href="/">Home</a>
@@ -105,28 +146,57 @@
     </div>
 
     <h2>SCADA Web Control</h2>
-    <div class="container">
-        <!-- Ảnh SCADA từ WinCC -->
-        <img src="/images/SCA1.png" class="scada-image">
 
-        <!-- Nút điều khiển Motor1 -->
-        <button class="switch" id="motor1" style="top: 200px; left: 150px;">OFF</button>
+    <div class="main-container">
+        <!-- Bảng hiển thị trạng thái thiết bị -->
+        <div class="table-container">
+            <h3>Device Status</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Device</th>
+                        <th>State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Motor 1</td>
+                        <td id="status-motor1">OFF</td>
+                    </tr>
+                    <tr>
+                        <td>Fan 1</td>
+                        <td id="status-fan1">OFF</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <!-- Nút điều khiển Quạt HN -->
-        <button class="switch" id="fan1" style="top: 250px; left: 600px;">OFF</button>
+        <!-- Màn hình HMI -->
+        <div class="hmi-container">
+            <img src="/images/SCA1.png" class="scada-image">
+        </div>
+
+        <!-- Khu vực nút điều khiển -->
+        <div class="controls-container">
+            <h3>Controls</h3>
+            <button class="switch" id="motor1">OFF</button>
+            <button class="switch" id="fan1">OFF</button>
+        </div>
     </div>
 
     <script>
         const motor1Btn = document.getElementById("motor1");
         const fan1Btn = document.getElementById("fan1");
+        const motor1Status = document.getElementById("status-motor1");
+        const fan1Status = document.getElementById("status-fan1");
 
-        function toggleSwitch(button, deviceName) {
-            let currentState = parseInt(button.getAttribute("data-state"));
+        function toggleSwitch(button, statusElement, deviceName) {
+            let currentState = button.classList.contains("on") ? 1 : 0;
             let newState = currentState === 1 ? 0 : 1;
 
-            button.setAttribute("data-state", newState);
             button.classList.toggle("on", newState === 1);
             button.textContent = newState === 1 ? "ON" : "OFF";
+            statusElement.textContent = newState === 1 ? "ON" : "OFF";
 
             fetch('/api/button-press', {
                 method: 'POST',
@@ -135,8 +205,8 @@
             });
         }
 
-        motor1Btn.addEventListener("click", () => toggleSwitch(motor1Btn, "motor1"));
-        fan1Btn.addEventListener("click", () => toggleSwitch(fan1Btn, "fan1"));
+        motor1Btn.addEventListener("click", () => toggleSwitch(motor1Btn, motor1Status, "motor1"));
+        fan1Btn.addEventListener("click", () => toggleSwitch(fan1Btn, fan1Status, "fan1"));
     </script>
 
 </body>
