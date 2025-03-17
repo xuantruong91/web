@@ -86,7 +86,7 @@ router.post('/clear-data', async (req, res) => {
 });
 
 
-rrouter.post('/button-press', async (req, res) => {
+router.post('/button-press', async (req, res) => {
     const { device, state } = req.body; // device: "motor1", "fan1", state: 0 hoặc 1
 
     if (!device || (state !== 0 && state !== 1)) {
