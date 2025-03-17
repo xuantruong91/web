@@ -158,7 +158,7 @@
                     let apiResponse = await fetch('/api/data'); // Gọi API lấy dữ liệu
                     let jsonData = await apiResponse.json();
 
-                    dataToExport = jsonData.data.map(test => [
+                    dataToExport = jsonData.data.map(control_EC_pH => [
                         control_EC_pH.ID,
                         control_EC_pH.Time,
                         control_EC_pH.Nồng_độ_EC,
