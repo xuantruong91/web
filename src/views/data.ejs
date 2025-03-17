@@ -65,10 +65,33 @@
     </div>
 
     <script>
-        function clearTable() {
-            let tableBody = document.getElementById("data-table");
-            tableBody.innerHTML = ""; // Xóa toàn bộ dữ liệu trong bảng
+        async function clearTable() {
+            if (!confirm("Bạn có chắc chắn muốn xóa toàn bộ dữ liệu không?")) return;
+
+            try {
+                let response = await fetch('/api/clear-data', { method: 'POST' });
+                let result = await response.json();
+
+                if (result.success) {
+                    alert("✅ Dữ liệu đã bị xóa!");
+                    document.getElementById("data-table").innerHTML = ""; // Xóa dữ liệu trong bảng
+                    clearChart(); // Gọi hàm xóa biểu đồ
+                } else {
+                    alert("❌ Lỗi khi xóa dữ liệu!");
+                }
+            } catch (error) {
+                console.error("Lỗi khi xóa dữ liệu:", error);
+                alert("❌ Lỗi khi xóa dữ liệu!");
+            }
+
+            if (trendChart) {
+                trendChart.data.labels = [];
+                trendChart.data.datasets.forEach(dataset => dataset.data = []);
+                trendChart.update();
+            }
         }
+
+
 
         let isFiltering = false; // Biến để kiểm tra có đang tìm kiếm không
 
