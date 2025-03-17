@@ -86,7 +86,7 @@ router.post('/clear-data', async (req, res) => {
 });
 
 
-router.post('/button-press', async (req, res) => {
+rrouter.post('/button-press', async (req, res) => {
     const { device, state } = req.body; // device: "motor1", "fan1", state: 0 hoặc 1
 
     if (!device || (state !== 0 && state !== 1)) {
@@ -94,9 +94,18 @@ router.post('/button-press', async (req, res) => {
     }
 
     try {
+        // Lấy giá trị mới nhất của Nồng_độ_EC và Nồng_độ_pH
+        const [latestData] = await connection.query(
+            "SELECT Nồng_độ_EC, Nồng_độ_pH FROM control_EC_pH ORDER BY id DESC LIMIT 1"
+        );
+
+        let ecValue = latestData.length > 0 ? latestData[0]["Nồng_độ_EC"] : null;
+        let pHValue = latestData.length > 0 ? latestData[0]["Nồng_độ_pH"] : null;
+
+        // Chèn dữ liệu vào bảng, kèm theo Nồng_độ_EC và Nồng_độ_pH mới nhất
         await connection.query(
-            "INSERT INTO control_EC_pH (device, state, Time) VALUES (?, ?, NOW())",
-            [device, state]
+            "INSERT INTO control_EC_pH (device, state, Time, Nồng_độ_EC, Nồng_độ_pH) VALUES (?, ?, NOW(), ?, ?)",
+            [device, state, ecValue, pHValue]
         );
 
         res.json({ success: true, message: `Trạng thái ${device} đã được cập nhật thành ${state}!` });
@@ -105,6 +114,7 @@ router.post('/button-press', async (req, res) => {
         res.status(500).json({ success: false, message: "Lỗi khi lưu trạng thái thiết bị!" });
     }
 });
+
 
 
 module.exports = router;
