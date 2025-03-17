@@ -76,12 +76,15 @@ router.post('/send-email', async (req, res) => {
 router.post('/clear-data', async (req, res) => {
     try {
         await connection.query("DELETE FROM control_EC_pH"); // Xóa toàn bộ dữ liệu
-        res.json({ success: true, message: "Dữ liệu đã bị xóa!" });
+        await connection.query("ALTER TABLE control_EC_pH AUTO_INCREMENT = 1"); // Reset ID về 1
+
+        res.json({ success: true, message: "Dữ liệu đã bị xóa và ID đã reset về 1!" });
     } catch (error) {
         console.error("Lỗi khi xóa dữ liệu:", error);
         res.status(500).json({ success: false, message: "Lỗi khi xóa dữ liệu!" });
     }
 });
+
 
 
 module.exports = router;
