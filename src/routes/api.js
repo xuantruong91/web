@@ -74,7 +74,7 @@ router.post('/send-email', async (req, res) => {
     }
 });
 
-app.post('/api/clear-data', async (req, res) => {
+router.post('/api/clear-data', async (req, res) => {
     try {
         await db.query("DELETE FROM control_EC_pH"); // Xóa toàn bộ dữ liệu
         res.json({ success: true, message: "Dữ liệu đã bị xóa!" });
