@@ -86,17 +86,25 @@ router.post('/clear-data', async (req, res) => {
 });
 
 
-router.post('/api/control', async (req, res) => {
-    const { device, state, time } = req.body; // Nhận thêm biến Time
+router.post('/button-press', async (req, res) => {
+    const { device, state } = req.body; // device: "motor1", "fan1", state: 0 hoặc 1
+
+    if (!device || (state !== 0 && state !== 1)) {
+        return res.status(400).json({ success: false, message: "Dữ liệu không hợp lệ!" });
+    }
+
     try {
-        await connection.query("UPDATE control_EC_pH SET motor1 = ? WHERE Time = ?", [state, time]);
-        res.json({ success: true, message: "Cập nhật thành công!" });
+        await connection.query(
+            "INSERT INTO control_EC_pH (device, state, Time) VALUES (?, ?, NOW())",
+            [device, state]
+        );
+
+        res.json({ success: true, message: `Trạng thái ${device} đã được cập nhật thành ${state}!` });
     } catch (error) {
-        s
-        res.status(500).json({ success: false, message: "Lỗi khi cập nhật!", error });
+        console.error("Lỗi khi lưu trạng thái thiết bị:", error);
+        res.status(500).json({ success: false, message: "Lỗi khi lưu trạng thái thiết bị!" });
     }
 });
-
 
 
 module.exports = router;

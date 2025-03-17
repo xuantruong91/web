@@ -121,20 +121,17 @@
         const fan1Btn = document.getElementById("fan1");
 
         function toggleSwitch(button, deviceName) {
-            button.classList.toggle("on");
-            button.textContent = button.classList.contains("on") ? "ON" : "OFF";
+            let currentState = parseInt(button.getAttribute("data-state"));
+            let newState = currentState === 1 ? 0 : 1;
 
-            const state = button.classList.contains("on") ? 1 : 0;
+            button.setAttribute("data-state", newState);
+            button.classList.toggle("on", newState === 1);
+            button.textContent = newState === 1 ? "ON" : "OFF";
 
-            // Lấy thời gian hiện tại theo định dạng phù hợp với MySQL
-            const now = new Date();
-            const timeString = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
-
-            // Gửi dữ liệu về server
-            fetch('/api/control', {
+            fetch('/api/button-press', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ device: deviceName, state: state, time: timeString })  // Thêm Time
+                body: JSON.stringify({ device: deviceName, state: newState })
             });
         }
 
