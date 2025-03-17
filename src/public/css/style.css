@@ -121,6 +121,35 @@ button {
     background-color: #0056b3;
 }
 
+.clear-button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+.clear-button:hover {
+    background-color: #0056b3;
+}
+
+.email-button {
+    padding: 8px 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+
+.email-button:hover {
+    background-color: #0056b3;
+}
+
+
 .bottom-bar {
     text-align: center;
     margin-top: 10px;
