@@ -86,5 +86,17 @@ router.post('/clear-data', async (req, res) => {
 });
 
 
+router.post('/api/control', async (req, res) => {
+    const { device, state, time } = req.body; // Nhận thêm biến Time
+    try {
+        await connection.query("UPDATE control_EC_pH SET motor1 = ? WHERE Time = ?", [state, time]);
+        res.json({ success: true, message: "Cập nhật thành công!" });
+    } catch (error) {
+        s
+        res.status(500).json({ success: false, message: "Lỗi khi cập nhật!", error });
+    }
+});
+
+
 
 module.exports = router;
