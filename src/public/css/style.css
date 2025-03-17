@@ -126,16 +126,27 @@ button {
     margin-top: 10px;
 }
 
-.chart-container {
-    width: 50%;
+.main-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Chia thành hai cột bằng nhau */
+    gap: 20px;
+    /* Khoảng cách giữa hai phần */
+    padding: 10px;
+    /* Thêm padding cho container */
+}
+
+.chart-container,
+.table-container {
     background: white;
-    padding: 5px;
-    margin-top: 20px;
+    padding: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
 #trend-chart {
-    width: 50%;
-    height: 80px;
+    width: 100%;
+    /* Biểu đồ chiếm toàn bộ chiều rộng của container */
+    height: 300px;
+    /* Chiều cao của biểu đồ */
 }

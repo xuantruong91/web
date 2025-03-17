@@ -10,21 +10,6 @@
 
 </head>
 <style>
-    .table-container {
-        width: 100%;
-        background: white;
-        padding: 5px;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        overflow-x: auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: center;
-    }
-
     th,
     td {
         padding: 5px;
@@ -53,26 +38,28 @@
         <button class="export-button" onclick="exportToExcel()">Xuất Excel</button>
     </div>
 
-    <div class="chart-container">
-        <div class="title">BIỂU ĐỒ XU HƯỚNG</div>
-        <canvas id="trend-chart"></canvas>
-    </div>
 
-    <div class="table-container">
-        <div class="title">BẢNG DỮ LIỆU</div>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Time</th>
-                    <th>Nồng độ EC</th>
-                    <th>Nồng độ pH</th>
-                </tr>
-            </thead>
-            <tbody id="data-table">
-                <!-- Dữ liệu sẽ được tải từ API -->
-            </tbody>
-        </table>
+    <div class="main-container">
+        <div class="chart-container">
+            <div class="title">BIỂU ĐỒ XU HƯỚNG</div>
+            <canvas id="trend-chart"></canvas>
+        </div>
+        <div class="table-container">
+            <div class="title">BẢNG DỮ LIỆU</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Time</th>
+                        <th>Nồng độ EC</th>
+                        <th>Nồng độ pH</th>
+                    </tr>
+                </thead>
+                <tbody id="data-table">
+                    <!-- Dữ liệu sẽ được tải từ API -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
