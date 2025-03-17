@@ -134,19 +134,60 @@ button {
     /* Khoảng cách giữa hai phần */
     padding: 10px;
     /* Thêm padding cho container */
+    height: 100vh;
+    /* Chiếm toàn bộ chiều cao của viewport */
 }
 
-.chart-container,
-.table-container {
+.chart-container {
+    width: 100%;
+    /* Chiếm toàn bộ chiều rộng của phần tử cha */
+    height: 400px;
+    /* Cố định chiều cao của bảng trend */
     background: white;
     padding: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    overflow: hidden;
+    /* Ngăn nội dung tràn ra ngoài */
+}
+
+.table-container {
+    width: 100%;
+    /* Chiếm toàn bộ chiều rộng của phần tử cha */
+    height: 400px;
+    /* Cố định chiều cao của bảng dữ liệu */
+    background: white;
+    padding: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow-y: auto;
+    /* Cho phép cuộn dọc khi dữ liệu vượt quá chiều cao */
 }
 
 #trend-chart {
     width: 100%;
-    /* Biểu đồ chiếm toàn bộ chiều rộng của container */
-    height: 50px;
-    /* Chiều cao của biểu đồ */
+    /* Chiếm toàn bộ chiều rộng của container */
+    height: 100%;
+    /* Chiếm toàn bộ chiều cao của container */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #171817;
+    color: white;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
 }

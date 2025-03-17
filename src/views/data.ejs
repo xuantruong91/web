@@ -256,11 +256,15 @@
                 let tableBody = document.getElementById("data-table");
                 tableBody.innerHTML = "";
 
-                let ecData = []; // Dữ liệu Nồng độ EC
-                let phData = []; // Dữ liệu Nồng độ pH
-                let labels = []; // Nhãn thời gian
+                let rawData = jsonData.data; // Dữ liệu gốc từ API
+                let sortedData = [...rawData].sort((a, b) => a.ID - b.ID); // hàm sort sắp xếp thứ tự,nếu a-b âm thì 
+                // giữ nguyên thứ tự,ngược lại a-b dương thì đổi chỗ 
 
-                jsonData.data.forEach(control_EC_pH => {
+                let ecData = [];
+                let phData = [];
+                let labels = [];
+
+                rawData.forEach(control_EC_pH => { // Dữ liệu bảng giữ nguyên
                     let row = document.createElement("tr");
                     row.innerHTML = `
                 <td>${control_EC_pH.ID}</td>
@@ -269,14 +273,14 @@
                 <td>${control_EC_pH.Nồng_độ_pH}</td>
             `;
                     tableBody.appendChild(row);
+                });
 
-                    // Lưu dữ liệu cho biểu đồ
+                sortedData.forEach(control_EC_pH => { // Dữ liệu biểu đồ sắp xếp theo ID
                     ecData.push(control_EC_pH.Nồng_độ_EC);
                     phData.push(control_EC_pH.Nồng_độ_pH);
                     labels.push(control_EC_pH.Time);
                 });
 
-                // Vẽ biểu đồ
                 updateChart(labels, ecData, phData);
 
             } catch (error) {
@@ -287,7 +291,6 @@
         function updateChart(labels, ecData, phData) {
             let ctx = document.getElementById("trend-chart").getContext("2d");
 
-            // Nếu biểu đồ đã tồn tại, cập nhật dữ liệu
             if (trendChart) {
                 trendChart.data.labels = labels;
                 trendChart.data.datasets[0].data = ecData;
@@ -296,7 +299,6 @@
                 return;
             }
 
-            // Nếu biểu đồ chưa tồn tại, tạo mới
             trendChart = new Chart(ctx, {
                 type: "line",
                 data: {
@@ -322,13 +324,26 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        y: {
-                            beginAtZero: true,
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time',
+                                font: { size: 14 }
+                            }
                         },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Nồng độ',
+                                font: { size: 14 }
+                            },
+                        },
+                        beginAtZero: true
                     },
                 },
             });
         }
+
 
 
 
