@@ -9,7 +9,7 @@ wss.on('connection', (ws) => {
 
     ws.on('message', async (message) => {
         try {
-            const { command, address, value } = JSON.parse(message);
+            const { command, address, value } = JSON.parse(message.toString());
             console.log("📩 Nhận lệnh:", message);
 
             if (command === 'write') {
