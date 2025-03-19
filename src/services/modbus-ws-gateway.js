@@ -21,6 +21,8 @@ wss.on('connection', (ws) => {
                 }
                 await client.writeRegister(address, value);
                 ws.send(JSON.stringify({ success: true, message: `✅ Đã ghi ${value} vào Address ${address}` }));
+                const dataCheck = await client.readHoldingRegisters(address, 1);
+                console.log(`✅ Đọc ngược lại từ WinCC - Value = ${dataCheck.data[0]}`);
             }
 
             if (command === 'read') {
