@@ -92,7 +92,9 @@ router.post('/button-press', async (req, res) => {
     const { device, state } = req.body;
 
     if (device === "motor1") {
+        console.log("✅ Đang ghi Modbus state:", state);
         await modbusService.writeMotorState(state); // Ghi xuống WinCC qua Modbus
+        console.log("✅ Ghi Modbus thành công");
     }
 
     // Lưu xuống database như cũ
