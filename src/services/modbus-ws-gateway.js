@@ -11,6 +11,8 @@ wss.on('connection', (ws) => {
         try {
             const { command, address, value } = JSON.parse(message.toString());
             console.log("📩 Nhận lệnh:", message);
+            console.log(`✅ Ghi Modbus thành công: Addr=${address}, Value=${value}`);
+
 
             if (command === 'write') {
                 if (!client.isOpen) {
