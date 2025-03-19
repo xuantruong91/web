@@ -90,13 +90,17 @@ router.post('/clear-data', async (req, res) => {
 
 router.post('/button-press', async (req, res) => {
     const { device, state } = req.body;
-
+  
     if (device === "motor1") {
-        console.log("✅ Đang ghi Modbus state:", state);
-        await modbusService.writeMotorState(state); // Ghi xuống WinCC qua Modbus
-        console.log("✅ Ghi Modbus thành công");
+        try {
+            // Gọi modbusService để ghi qua websocket
+            await modbusService.writeMotorState(state); 
+            console.log("✅ Ghi Modbus WS thành công");
+        } catch (err) {
+            console.error("❌ Lỗi Modbus:", err);
+            return res.status(500).json({ success: false, message: "Modbus Error" });
+        }
     }
-
     // Lưu xuống database như cũ
     try {
         const [latestData] = await connection.query(

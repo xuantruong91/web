@@ -1,40 +1,24 @@
-const ModbusRTU = require('modbus-serial');
-const client = new ModbusRTU();
 
-// Kết nối đến WinCC Runtime đóng vai trò Modbus Server
-const connectModbus = async () => {
-    if (!client.isOpen) {
-        await client.connectTCP('192.168.0.1', { port: 502 });  // IP WinCC, Port mặc định 502
-        client.setID(1); // Slave ID bên WinCC
-    }
-};
+const WebSocket = require('ws');
 
-// Ghi giá trị ON/OFF vào tag motor1_state (Holding Register 400001 => address 0)
-const writeMotorState = async (state) => {
-    try {
-        await connectModbus();
-        const value = state === 1 ? 1 : 0; // Đảm bảo chỉ ghi 0 hoặc 1
-        await client.writeRegister(0, value); // Address 0 tương đương 4x400001
-        console.log(`✅ Ghi trạng thái Motor1: ${value}`);
-    } catch (err) {
-        console.error("❌ Lỗi ghi Modbus:", err);
-    }
-};
+async function writeMotorState(state) {
+    return new Promise((resolve, reject) => {
+        const ws = new WebSocket('ws://192.168.0.100:8080'); // IP máy chạy modbus-ws-gateway.js
+        ws.on('open', () => {
+            ws.send(JSON.stringify({ command: 'write', address: 0, value: state }));
+        });
 
-// Đọc giá trị motor1_state từ Holding Register
-const readMotorState = async () => {
-    try {
-        await connectModbus();
-        const data = await client.readHoldingRegisters(0, 1); // Đọc 1 thanh ghi từ địa chỉ 0
-        console.log(`✅ Đọc trạng thái Motor1: ${data.data[0]}`);
-        return data.data[0];
-    } catch (err) {
-        console.error("❌ Lỗi đọc Modbus:", err);
-        return null;
-    }
-};
+        ws.on('message', (msg) => {
+            console.log('📩 Phản hồi từ Gateway:', msg);
+            ws.close();
+            resolve();
+        });
 
-module.exports = {
-    writeMotorState,
-    readMotorState
-};
+        ws.on('error', (err) => {
+            console.error('❌ WS Error:', err);
+            reject(err);
+        });
+    });
+}
+
+module.exports = { writeMotorState };
