@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../config/database');
 const nodemailer = require('nodemailer');
+const modbusService = require('../services/modbusService');
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
+
 
 router.get('/data', async (req, res) => {
     try {
@@ -87,14 +89,14 @@ router.post('/clear-data', async (req, res) => {
 
 
 router.post('/button-press', async (req, res) => {
-    const { device, state } = req.body; // device: "motor1", "fan1", state: 0 hoặc 1
+    const { device, state } = req.body;
 
-    if (!device || (state !== 0 && state !== 1)) {
-        return res.status(400).json({ success: false, message: "Dữ liệu không hợp lệ!" });
+    if (device === "motor1") {
+        await modbusService.writeMotorState(state); // Ghi xuống WinCC qua Modbus
     }
 
+    // Lưu xuống database như cũ
     try {
-        // Lấy giá trị mới nhất của Nồng_độ_EC và Nồng_độ_pH
         const [latestData] = await connection.query(
             "SELECT Nồng_độ_EC, Nồng_độ_pH FROM control_EC_pH ORDER BY id DESC LIMIT 1"
         );
@@ -102,7 +104,6 @@ router.post('/button-press', async (req, res) => {
         let ecValue = latestData.length > 0 ? latestData[0]["Nồng_độ_EC"] : null;
         let pHValue = latestData.length > 0 ? latestData[0]["Nồng_độ_pH"] : null;
 
-        // Chèn dữ liệu vào bảng, kèm theo Nồng_độ_EC và Nồng_độ_pH mới nhất
         await connection.query(
             "INSERT INTO control_EC_pH (device, state, Time, Nồng_độ_EC, Nồng_độ_pH) VALUES (?, ?, NOW(), ?, ?)",
             [device, state, ecValue, pHValue]
@@ -114,7 +115,6 @@ router.post('/button-press', async (req, res) => {
         res.status(500).json({ success: false, message: "Lỗi khi lưu trạng thái thiết bị!" });
     }
 });
-
 
 
 module.exports = router;

@@ -2,6 +2,7 @@ require('dotenv').config()
 const webRoutes = require('./routes/web')
 const configViewEngine = require('./config/viewEngine')
 const express = require('express')
+const snap7 = require('node-snap7')
 const connection = require('./config/database')
 const app = express()
 const port = process.env.PORT || 3000
@@ -9,6 +10,8 @@ const hostname = process.env.HOST_NAME;
 const path = require('path')
 const cors = require('cors');
 app.use(cors());
+
+
 
 
 //config req.body(lấy thông tin nhập từ html về)
@@ -40,6 +43,8 @@ const apiRoutes = require('./routes/api'); // Import file API
 app.use('/api', apiRoutes); // Định nghĩa đường dẫn API
 //routes
 app.use(webRoutes)
+
+
 
 
 
