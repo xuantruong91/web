@@ -5,7 +5,11 @@ async function writeMotorState(state) {
     return new Promise((resolve, reject) => {
         const ws = new WebSocket('ws://localhost:8080'); // IP máy chạy modbus-ws-gateway.js
         ws.on('open', () => {
-            ws.send(JSON.stringify({ command: 'write', address: 0, value: state }));
+            ws.send(JSON.stringify({ 
+                command: 'write', 
+                address: 0, 
+                value: Number(state) // Chuyển thành số nguyên
+            }));
         });
 
         ws.on('message', (msg) => {
@@ -20,5 +24,6 @@ async function writeMotorState(state) {
         });
     });
 }
+
 
 module.exports = { writeMotorState };
