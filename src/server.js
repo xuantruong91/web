@@ -2,7 +2,6 @@ require('dotenv').config()
 const webRoutes = require('./routes/web')
 const configViewEngine = require('./config/viewEngine')
 const express = require('express')
-require('./services/modbus-ws-gateway');  // Kích hoạt luôn WS khi chạy server
 const connection = require('./config/database')
 const app = express()
 const port = process.env.PORT || 3000

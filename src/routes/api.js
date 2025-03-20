@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const connection = require('../config/database');
 const nodemailer = require('nodemailer');
-const modbusService = require('../services/modbusService');
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
@@ -90,17 +89,8 @@ router.post('/clear-data', async (req, res) => {
 
 router.post('/button-press', async (req, res) => {
     const { device, state } = req.body;
-  
-    if (device === "motor1") {
-        try {
-            // Gọi modbusService để ghi qua websocket
-            await modbusService.writeMotorState(state); 
-            console.log("✅ Ghi Modbus WS thành công");
-        } catch (err) {
-            console.error("❌ Lỗi Modbus:", err);
-            return res.status(500).json({ success: false, message: "Modbus Error" });
-        }
-    }
+
+    
     // Lưu xuống database như cũ
     try {
         const [latestData] = await connection.query(
