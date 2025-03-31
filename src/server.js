@@ -11,7 +11,7 @@ const path = require('path')
 const cors = require('cors');
 app.use(cors());
 
-
+connectToPLC();
 
 
 //config req.body(lấy thông tin nhập từ html về)

@@ -3,7 +3,8 @@ const nodes7 = require("nodes7");
 const plc = new nodes7();
 
 const PLC_CONFIG = {
-    host: "192.168.0.1", // Đổi thành IP PLC của bạn
+    host: "192.168.0.1",
+    port: 102, // Đổi thành IP PLC của bạn
     rack: 0,
     slot: 1
 };
