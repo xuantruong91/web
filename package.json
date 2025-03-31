@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "Nguyen Xuan Truong",
   "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/server.js"
-    "postinstall": "npm rebuild node-snap7"
-  },
+ "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "start": "node ./src/server.js",
+  "postinstall": "npm rebuild node-snap7 --build-from-source"
+},
+
   "keywords": [
     "nodejs",
     "react"

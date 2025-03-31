@@ -2,9 +2,8 @@ require('dotenv').config()
 const webRoutes = require('./routes/web')
 const configViewEngine = require('./config/viewEngine')
 const express = require('express')
-const connection = require('./config/database')
-const { connectToPLC, writePLC } = require("./config/plc");
-const app = express()
+const connection = require('./config/database');
+const app = express();
 const port = process.env.PORT || 3000
 const hostname = process.env.HOST_NAME;
 const path = require('path')
