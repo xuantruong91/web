@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
+const plcController = require("../controllers/plcController");
 
 
 router.get('/data', async (req, res) => {
@@ -109,6 +110,23 @@ router.post('/button-press', async (req, res) => {
     } catch (error) {
         console.error("Lỗi khi lưu trạng thái thiết bị:", error);
         res.status(500).json({ success: false, message: "Lỗi khi lưu trạng thái thiết bị!" });
+    }
+});
+// API đọc dữ liệu từ PLC
+router.get('/plc/read-tags', async (req, res) => {
+    try {
+        let buffer = Buffer.alloc(4);
+        let success = s7client.ReadArea(snap7.S7AreaDB, 1, 0, 4, snap7.S7WLReal, buffer);
+        
+        if (!success) {
+            throw new Error(s7client.ErrorText(s7client.LastError()));
+        }
+
+        let value = buffer.readFloatLE(0); // Đọc giá trị từ buffer
+        res.json({ success: true, value });
+    } catch (error) {
+        console.error("❌ Lỗi đọc dữ liệu PLC:", error);
+        res.status(500).json({ success: false, message: "Lỗi đọc dữ liệu PLC!" });
     }
 });
 
