@@ -9,6 +9,26 @@ const hostname = process.env.HOST_NAME;
 const path = require('path')
 const cors = require('cors');
 app.use(cors());
+const snap7 = require('node-snap7');
+
+// Khởi tạo kết nối với PLC
+const plc = new snap7.S7Client();
+
+const PLC_CONFIG = {
+    ip: "192.168.0.1", 
+    rack: 0,
+    slot: 1
+};
+
+// Kết nối đến PLC
+function connectToPLC() {
+    if (!plc.ConnectTo(PLC_CONFIG.ip, PLC_CONFIG.rack, PLC_CONFIG.slot)) {
+        console.log("✅ Kết nối PLC thành công!");
+    } else {
+        console.error("❌ Lỗi kết nối PLC:", plc.ErrorText(plc.LastError()));
+    }
+}
+
 
 
 
