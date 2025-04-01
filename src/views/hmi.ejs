@@ -116,9 +116,9 @@
 
     .switch {
         display: block;
-        width: 100px;
-        height: 40px;
-        margin: 10px auto;
+        width: 80px;
+        height: 30px;
+        margin: 5px auto;
         background-color: gray;
         color: white;
         border: none;
@@ -160,12 +160,16 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <td>Mode</td>
+                        <td id="status-mode">MANU</td>
+                    </tr>
+                    <tr>
                         <td>Motor 1</td>
                         <td id="status-motor1">OFF</td>
                     </tr>
                     <tr>
-                        <td>Fan 1</td>
-                        <td id="status-fan1">OFF</td>
+                        <td>Motor 2</td>
+                        <td id="status-motor2">OFF</td>
                     </tr>
                 </tbody>
             </table>
@@ -179,24 +183,39 @@
         <!-- Khu vực nút điều khiển -->
         <div class="controls-container">
             <h3>Controls</h3>
-            <button class="switch" id="motor1">OFF</button>
-            <button class="switch" id="fan1">OFF</button>
+            <td>Mode</td>
+        <button class="switch" id="mode">MANU</button>
+            <td>Motor 1</td>
+            <td></td><button class="switch" id="motor1">OFF</button></td>
+        <td>Motor 2</td>
+            <button class="switch" id="motor2">OFF</button>
+        </div>
+        
         </div>
     </div>
 
     <script>
         const motor1Btn = document.getElementById("motor1");
-        const fan1Btn = document.getElementById("fan1");
+        const motor2Btn = document.getElementById("motor2");
+        const modeBtn = document.getElementById("mode");
         const motor1Status = document.getElementById("status-motor1");
-        const fan1Status = document.getElementById("status-fan1");
+        const motor2Status = document.getElementById("status-motor2");
+        const modeStatus = document.getElementById("status-mode");
 
         function toggleSwitch(button, statusElement, deviceName) {
             let currentState = button.classList.contains("on") ? 1 : 0;
             let newState = currentState === 1 ? 0 : 1;
 
             button.classList.toggle("on", newState === 1);
+
+           if (deviceName === "mode") {
+            button.textContent = newState === 1 ? "AUTO" : "MANU";
+            statusElement.textContent = newState === 1 ? "AUTO" : "MANU";
+        } else {
             button.textContent = newState === 1 ? "ON" : "OFF";
             statusElement.textContent = newState === 1 ? "ON" : "OFF";
+        }
+
 
             fetch('/api/button-press', {
                 method: 'POST',
@@ -206,9 +225,10 @@
         }
 
         motor1Btn.addEventListener("click", () => toggleSwitch(motor1Btn, motor1Status, "motor1"));
-        fan1Btn.addEventListener("click", () => toggleSwitch(fan1Btn, fan1Status, "fan1"));
+        motor2Btn.addEventListener("click", () => toggleSwitch(motor2Btn, motor2Status, "motor2"));
+        modeBtn.addEventListener("click", () => toggleSwitch(modeBtn, modeStatus, "mode"));
     </script>
 
 </body>
 
-</html>
+</html> 
