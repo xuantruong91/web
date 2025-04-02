@@ -1,23 +1,36 @@
-const { readPLC } = require("../config/plc");
+const WebSocket = require('ws');
+const { readPLC } = require('../config/plc');
 
-module.exports = function (io) {
-    io.on("connection", (socket) => {
-        console.log("🔗 Client connected:", socket.id);
+function setupWebSocket(server) {
+    const wss = new WebSocket.Server({ server });
 
-        const interval = setInterval(async () => {
-            try {
-                console.log("📢 Gửi dữ liệu PLC qua socket...");
-                const plcData = await readPLC();
-                console.log("📡 Dữ liệu PLC gửi đi:", plcData);
-                socket.emit("plc-data", plcData);
-            } catch (error) {
-                console.error("❌ Lỗi khi đọc PLC:", error);
-            }
-        }, 2000);
+    async function broadcastPLCStatus() {
+        try {
+            const data = await readPLC(2,0,2);
+            const data1 = await readPLC(5,0,2);
+            const message = JSON.stringify({
+                type: 'status',
+                data: data ,
+                data1: data1
+            });
 
-        socket.on("disconnect", () => {
-            console.log("❌ Client disconnected:", socket.id);
-            clearInterval(interval);
-        });
+            wss.clients.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(message);
+                }
+            });
+        } catch (error) {
+            console.error('Lỗi khi gửi dữ liệu PLC:', error);
+        }
+    }
+
+    // Cập nhật trạng thái PLC liên tục mỗi 1 giây
+    setInterval(broadcastPLCStatus, 1000);
+
+    wss.on('connection', (ws) => {
+        console.log('🔗 Client WebSocket connected');
+        broadcastPLCStatus(); // Gửi ngay dữ liệu khi client kết nối
     });
-};
+}
+
+module.exports = setupWebSocket;

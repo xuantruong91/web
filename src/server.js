@@ -21,9 +21,10 @@ const port = process.env.PORT || 3000;
   configViewEngine(app);
 
   const server = http.createServer(app);
-const io = socketIo(server);
-require("./services/socket")(io);
-
+  const io = socketIo(server);
+  const setupWebSocket = require("./services/socket");
+  
+  setupWebSocket(server);
 
 // Kết nối PLC khi server khởi động
 

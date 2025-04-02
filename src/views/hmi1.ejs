@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCADA Web</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2e2699;
+            --secondary-color: #2989c0;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --light-text: #ffffff;
+            --medium-text: #cccccc;
+            --success-color: #25b679;
+            --warning-color: #ff9800;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+        }
+
+        /* Thanh điều hướng */
+        .topnav {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background-color: var(--primary-color);
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .topnav a {
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+            transition: all 0.3s ease;
+        }
+
+        .topnav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .topnav a.active {
+            background-color: var(--secondary-color);
+        }
+
+        .page-title {
+            text-align: center;
+            margin-top: 80px;
+            padding: 20px 0;
+            font-size: 28px;
+            color: var(--light-text);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Bố cục chính */
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            padding: 0 20px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Bảng trạng thái */
+        .table-container {
+            background: rgba(46, 38, 153, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table-container h3 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--light-text);
+            font-size: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            background-color: rgba(41, 137, 192, 0.2);
+            color: var(--light-text);
+            font-weight: normal;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Khu vực HMI */
+        .hmi-container {
+            background: rgba(41, 137, 192, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hmi-container h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--light-text);
+            font-size: 20px;
+        }
+
+        .scada-image {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Khu vực nút điều khiển */
+        .controls-container {
+            background: rgba(46, 38, 153, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .controls-container h3 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--light-text);
+            font-size: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .control-row:last-child {
+            border-bottom: none;
+        }
+
+        .control-label {
+            font-size: 16px;
+            color: var(--medium-text);
+        }
+
+        /* Nút bấm kiểu công tắc */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin: 5px 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #333;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--secondary-color);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--secondary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .status-label {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .status-on {
+            background-color: rgba(37, 182, 121, 0.2);
+            color: #25b679;
+        }
+
+        .status-off {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #cccccc;
+        }
+
+        .status-auto {
+            background-color: rgba(41, 137, 192, 0.2);
+            color: #2989c0;
+        }
+
+        .status-manu {
+            background-color: rgba(255, 152, 0, 0.2);
+            color: #ff9800;
+        }
+
+        /* Responsive layout */
+        @media screen and (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .hmi-container {
+                grid-column: span 2;
+                order: -1;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .hmi-container {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Thanh điều hướng -->
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/create_user">Create Users</a>
+        <a href="/list">List User</a>
+        <a href="/data">DATA</a>
+        <a class="active" href="/hmi">HMI</a>
+    </div>
+
+    <h2 class="page-title">SCADA Web Control</h2>
+
+    <div class="main-container">
+        <!-- Bảng hiển thị trạng thái thiết bị -->
+        <div class="table-container">
+            <h3>Device Status</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Device</th>
+                        <th>State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mode</td>
+                        <td>
+                            <span class="status-label" id="status-mode">MANU</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Motor 1</td>
+                        <td>
+                            <span class="status-label" id="status-motor1">OFF</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Motor 2</td>
+                        <td>
+                            <span class="status-label" id="status-motor2">OFF</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mixer</td>
+                        <td>
+                            <span class="status-label" id="status-mixer">OFF</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fan thông gió</td>
+                        <td>
+                            <span class="status-label" id="status-fan_thong_gio">OFF</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fan hút nhiệt</td>
+                        <td>
+                            <span class="status-label" id="status-fan_hut_nhiet">OFF</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Đèn sưởi</td>
+                        <td>
+                            <span class="status-label" id="status-den_suoi">OFF</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Màn hình HMI -->
+        <div class="hmi-container">
+            <h3>SCADA Visualization</h3>
+            <img src="/images/SCA1.png" class="scada-image" alt="SCADA Visualization">
+        </div>
+
+        <!-- Khu vực nút điều khiển -->
+        <div class="controls-container">
+            <h3>Controls</h3>
+            <div class="control-row">
+                <span class="control-label">Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="mode-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Motor 1</span>
+                <label class="switch">
+                    <input type="checkbox" id="motor1-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Motor 2</span>
+                <label class="switch">
+                    <input type="checkbox" id="motor2-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Mixer</span>
+                <label class="switch">
+                    <input type="checkbox" id="mixer-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Fan thông gió</span>
+                <label class="switch">
+                    <input type="checkbox" id="fan_thong_gio-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Fan hút nhiệt</span>
+                <label class="switch">
+                    <input type="checkbox" id="fan_hut_nhiet-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Đèn sưởi</span>
+                <label class="switch">
+                    <input type="checkbox" id="den_suoi-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Danh sách các thiết bị và map tên thiết bị với tên trong PLC
+        const devices = ["motor1", "motor2", "mixer", "fan_thong_gio", "fan_hut_nhiet", "den_suoi", "mode"];
+        
+        // Gắn sự kiện cho tất cả các nút công tắc
+        devices.forEach(device => {
+            const toggleButton = document.getElementById(`${device}-toggle`);
+            
+            if (toggleButton) {
+                toggleButton.addEventListener('change', function() {
+                    let newState = this.checked;
+                    let displayState;
+                    
+                    if (device === "mode") {
+                        displayState = newState ? "AUTO" : "MANU";
+                    } else {
+                        displayState = newState ? "ON" : "OFF";
+                    }
+                    
+                    // Cập nhật hiển thị
+                    updateStatusDisplay(device, displayState);
+                    
+                    // Gửi dữ liệu lên server
+                    fetch('/api/button-press', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ device, state: newState })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Server response:", data);
+                        // Nếu có lỗi từ server, revert thay đổi
+                        if (!data.success) {
+                            toggleButton.checked = !newState;
+                            updateStatusDisplay(device, device === "mode" ? 
+                                (!newState ? "AUTO" : "MANU") : 
+                                (!newState ? "ON" : "OFF"));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error updating state:', error);
+                        // Revert thay đổi nếu có lỗi
+                        toggleButton.checked = !newState;
+                        updateStatusDisplay(device, device === "mode" ? 
+                            (!newState ? "AUTO" : "MANU") : 
+                            (!newState ? "ON" : "OFF"));
+                    });
+                });
+            }
+        });
+        
+        // Cập nhật hiển thị trạng thái
+        function updateStatusDisplay(device, state) {
+            const statusElement = document.getElementById(`status-${device}`);
+            if (statusElement) {
+                statusElement.textContent = state;
+                
+                // Thay đổi lớp CSS dựa trên trạng thái
+                statusElement.className = "status-label";
+                if (state === "ON") {
+                    statusElement.classList.add("status-on");
+                } else if (state === "OFF") {
+                    statusElement.classList.add("status-off");
+                } else if (state === "AUTO") {
+                    statusElement.classList.add("status-auto");
+                } else if (state === "MANU") {
+                    statusElement.classList.add("status-manu");
+                }
+            }
+        }
+        
+        // Khởi tạo cho tất cả các trạng thái hiển thị
+        function initializeStatusLabels() {
+            devices.forEach(device => {
+                const statusElement = document.getElementById(`status-${device}`);
+                if (statusElement) {
+                    let currentState = statusElement.textContent;
+                    updateStatusDisplay(device, currentState);
+                }
+            });
+        }
+        
+        // Gọi hàm khởi tạo khi tải trang
+        document.addEventListener('DOMContentLoaded', initializeStatusLabels);
+        
+        // Cập nhật UI từ dữ liệu PLC
+        function updateUIFromPLC(data) {
+            // Map giữa tên thiết bị trong HTML và tên trong dữ liệu PLC
+            const deviceMapping = {
+                "mode": "Mode_Btn",
+                "motor1": "Motor1_Btn",
+                "motor2": "Motor2_Btn",
+                "mixer": "Mixer_Btn",
+                "fan_thong_gio": "Fan_thong_gio_Btn",
+                "fan_hut_nhiet": "Fan_hut_nhiet_Btn",
+                "den_suoi": "Đèn_sưởi_Btn"
+            };
+            
+            devices.forEach(device => {
+                const plcProperty = deviceMapping[device];
+                if (data[plcProperty] !== undefined) {
+                    let state;
+                    if (device === "mode") {
+                        state = data[plcProperty] ? "AUTO" : "MANU";
+                    } else {
+                        state = data[plcProperty] ? "ON" : "OFF";
+                    }
+                    
+                    const toggleCheckbox = document.getElementById(`${device}-toggle`);
+                    if (toggleCheckbox) toggleCheckbox.checked = data[plcProperty];
+                    
+                    // Cập nhật hiển thị trạng thái
+                    updateStatusDisplay(device, state);
+                }
+            });
+        }
+        
+        // WebSocket connection - Kết nối websocket để cập nhật liên tục
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+            const socket = new WebSocket(`${protocol}${window.location.host}`);
+            socket.onmessage = (event) => {
+                try {
+                    const message = JSON.parse(event.data);
+                    if (message.type === 'status') updateUIFromPLC(message.data);
+                } catch (error) {
+                    console.error('Error processing message:', error);
+                }
+            };
+            socket.onclose = () => setTimeout(connectWebSocket, 1000);
+        }
+        connectWebSocket();
+
+        // Lấy trạng thái ban đầu khi trang vừa tải
+        fetch('/api/plc-status')
+            .then(response => response.json())
+            .then(data => { 
+                if (data.success) updateUIFromPLC(data.data); 
+            })
+            .catch(error => console.error('Error fetching initial state:', error));
+    </script>
+</body>
+</html>

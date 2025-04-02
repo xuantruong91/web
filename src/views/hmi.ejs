@@ -52,14 +52,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 100px 20px 20px;
+        padding: 80px 20px 20px;
         gap: 20px;
     }
 
     /* Bảng trạng thái */
     .table-container {
         width: 25%;
-        background: white;
+        background: rgb(13, 197, 230);
         padding: 15px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
@@ -103,8 +103,8 @@
 
     /* Khu vực nút điều khiển */
     .controls-container {
-        width: 25%;
-        background: white;
+        width: 30%;
+        background: rgb(13, 188, 211);
         padding: 15px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
@@ -171,6 +171,22 @@
                         <td>Motor 2</td>
                         <td id="status-motor2">OFF</td>
                     </tr>
+                    <tr>
+                        <td>Mixer</td>
+                        <td id="status-mixer">OFF</td>
+                    </tr>
+                    <tr>
+                        <td>Fan thông gió</td>
+                        <td id="status-fan_thong_gio">OFF</td>
+                    </tr>
+                    <tr>
+                        <td>Fan hút nhiệt</td>
+                        <td id="status-fan_hut_nhiet">OFF</td>
+                    </tr>
+                    <tr>
+                        <td>Đèn sưởi</td>
+                        <td id="status-den_suoi">OFF</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -183,52 +199,90 @@
         <!-- Khu vực nút điều khiển -->
         <div class="controls-container">
             <h3>Controls</h3>
-            <td>Mode</td>
-        <button class="switch" id="mode">MANU</button>
-            <td>Motor 1</td>
-            <td></td><button class="switch" id="motor1">OFF</button></td>
-        <td>Motor 2</td>
-            <button class="switch" id="motor2">OFF</button>
-        </div>
-        
+            <table>
+                <tr>
+                    <td>Mode</td>
+                    <td><button class="switch" id="mode">MANU</button></td>
+                </tr>
+                <tr>
+                    <td>Motor 1</td>
+                    <td><button class="switch" id="motor1">OFF</button></td>
+                </tr>
+                <tr>
+                    <td>Motor 2</td>
+                    <td><button class="switch" id="motor2">OFF</button></td>
+                </tr>
+                <tr>
+                    <td>Mixer</td>
+                    <td><button class="switch" id="mixer">OFF</button></td>
+                </tr>
+                <tr>
+                    <td>Fan thông gió</td>
+                    <td><button class="switch" id="fan_thong_gio">OFF</button></td>
+                </tr>
+                <tr>
+                    <td>Fan hút nhiệt</td>
+                    <td><button class="switch" id="fan_hut_nhiet">OFF</button></td>
+                </tr>
+                <tr>
+                    <td>Đèn sưởi</td>
+                    <td><button class="switch" id="den_suoi">OFF</button></td>
+                </tr>
+            </table>
         </div>
     </div>
 
     <script>
-        const motor1Btn = document.getElementById("motor1");
-        const motor2Btn = document.getElementById("motor2");
-        const modeBtn = document.getElementById("mode");
-        const motor1Status = document.getElementById("status-motor1");
-        const motor2Status = document.getElementById("status-motor2");
-        const modeStatus = document.getElementById("status-mode");
-
         function toggleSwitch(button, statusElement, deviceName) {
-            let currentState = button.classList.contains("on") ? 1 : 0;
-            let newState = currentState === 1 ? 0 : 1;
-
-            button.classList.toggle("on", newState === 1);
-
-           if (deviceName === "mode") {
-            button.textContent = newState === 1 ? "AUTO" : "MANU";
-            statusElement.textContent = newState === 1 ? "AUTO" : "MANU";
-        } else {
-            button.textContent = newState === 1 ? "ON" : "OFF";
-            statusElement.textContent = newState === 1 ? "ON" : "OFF";
-        }
-
-
+            let newState = button.textContent === "ON" ? "OFF" : "ON";
+            if (deviceName === "mode") {
+                newState = button.textContent === "AUTO" ? "MANU" : "AUTO";
+            }
+            button.textContent = newState;
+            statusElement.textContent = newState;
             fetch('/api/button-press', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ device: deviceName, state: newState })
+                body: JSON.stringify({ device: deviceName, state: newState === "ON" || newState === "AUTO" })
+            });
+        }
+        
+        document.querySelectorAll('.switch').forEach(button => {
+            button.addEventListener("click", () => {
+                const statusId = "status-" + button.id;
+                toggleSwitch(button, document.getElementById(statusId), button.id);
+            });
+        });
+
+        function updateUIFromPLC(data) {
+            ["mode", "motor1", "motor2", "mixer", "fan_thong_gio", "fan_hut_nhiet", "den_suoi"].forEach(device => {
+                let state = data[device] ? "ON" : "OFF";
+                if (device === "mode") state = data[device] ? "AUTO" : "MANU";
+                document.getElementById(device).textContent = state;
+                document.getElementById("status-" + device).textContent = state;
             });
         }
 
-        motor1Btn.addEventListener("click", () => toggleSwitch(motor1Btn, motor1Status, "motor1"));
-        motor2Btn.addEventListener("click", () => toggleSwitch(motor2Btn, motor2Status, "motor2"));
-        modeBtn.addEventListener("click", () => toggleSwitch(modeBtn, modeStatus, "mode"));
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+            const socket = new WebSocket(`${protocol}${window.location.host}`);
+            socket.onmessage = (event) => {
+                try {
+                    const message = JSON.parse(event.data);
+                    if (message.type === 'status') updateUIFromPLC(message.data);
+                } catch (error) {
+                    console.error('Error processing message:', error);
+                }
+            };
+            socket.onclose = () => setTimeout(connectWebSocket, 1000);
+        }
+        connectWebSocket();
+
+        fetch('/api/plc-status')
+            .then(response => response.json())
+            .then(data => { if (data.success) updateUIFromPLC(data.data); })
+            .catch(error => console.error('Error fetching initial state:', error));
     </script>
 
 </body>
-
-</html> 
+</html>

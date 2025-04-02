@@ -84,9 +84,10 @@ router.post('/clear-data', async (req, res) => {
 
 router.get('/plc-status', async (req, res) => {
     try {
-        const data = await readPLC();
-        console.log("📡 Dữ liệu PLC (từ API):", data);
-        res.json({ success: true, data });
+        const data = await readPLC(2,0,2);
+        const data1 = await readPLC(5,0,2);
+        console.log("📡 Dữ liệu PLC (từ API):", data,data1);
+        res.json({ success: true, data, data1 });
     } catch (error) {
         console.error("❌ Lỗi đọc PLC:", error);
         res.status(500).json({ success: false, message: "Lỗi đọc PLC" });
@@ -96,13 +97,25 @@ router.get('/plc-status', async (req, res) => {
 router.post('/button-press', async (req, res) => {
     const { device, state } = req.body;
     try {
-        const currentState = await readPLC();
+        const currentState = await readPLC(2,0,2);
         if (device === "motor1") {
             await writePLC("motor1",state);
         } else if (device === "motor2") {
             await writePLC("motor2", state);
         } else if((device === "mode")){
             await writePLC("mode", state);
+        } else if((device === "mixer")){
+            await writePLC("mixer", state);
+        }else if((device === "fan_hut_nhiet")){
+            await writePLC("fan_hut_nhiet", state);
+        }else if((device === "fan_thong_gio")){
+            await writePLC("fan_thong_gio", state);
+        }else if((device === "den_suoi")){
+            await writePLC("den_suoi", state);
+        }else if((device === "emergency")){
+            await writePLC("emergency", state);
+        } else if((device === "reset")){
+            await writePLC("reset", state);
         }
         res.json({ success: true, message: `${device} đã cập nhật trạng thái ${state ? "ON" : "OFF"}` });
     } catch (error) {

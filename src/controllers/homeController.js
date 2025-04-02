@@ -97,7 +97,7 @@ const PLC_data = async (req, res) => {
     return res.render('data.ejs', { data: result })
 }
 const PLC_HMI = async (req, res) => {
-    res.render('hmi.ejs')
+    res.render('hmi2.ejs')
 }
 
 module.exports = {

@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>SCADA CONTROLL</title>
+    <!-- Font Awesome cho biểu tượng đẹp hơn -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Thêm Iconify cho các biểu tượng đẹp hơn -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/iconify/2.2.1/iconify.min.js"></script>
+   
+</head>
+
+<body>
+    <!-- Thanh điều hướng -->
+    <div class="topnav">
+        <a href="/">Home</a>
+        <a href="/create_user">Create Users</a>
+        <a href="/list">List User</a>
+        <a href="/data">DATA</a>
+        <a class="active" href="/hmi">HMI</a>
+    </div>
+
+    <h2 class="page-title">SCADA CONTROLL</h2>
+    <div class="status-panel">
+        
+    <div class="tabs-container">
+        <div class="tab active" id="tab-control">Điều khiển</div>
+        <div class="tab" id="tab-settings">Cài đặt</div>
+    </div>
+
+    <div class="main-container">
+        <!-- Khu vực điều khiển -->
+        <div class="section-container" id="control-section">
+            <div class="section-title">
+                Điều khiển  
+                <div class="mode-toggle">
+                    <span id="mode-text">Manual</span>
+                    <label class="switch" style="margin-left: 10px;">
+                        <input type="checkbox" id="mode-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="controls-grid">
+                <!-- Motor 1 -->
+                <div class="control-card">
+                    <span class="iconify device-icon" data-icon="mdi:engine" style="color: #2989c0;"></span>
+                    <div class="device-name">Motor 1</div>
+                    <div class="light-indicator">
+                        <div class="light-wrapper">
+                            <div id="motor1-light" class="light"></div>
+                        </div>
+                    </div>
+                    <button class="toggle-button" id="motor1-toggle">Motor 1</button>
+                    
+                    
+                </div>
+
+                <!-- Motor 2 -->
+                <div class="control-card">
+                    <span class="iconify device-icon" data-icon="mdi:engine-outline" style="color: #2989c0;"></span>
+                    <div class="device-name">Motor 2</div>
+                    <div class="light-indicator">
+                        <div class="light-wrapper">
+                            <div id="motor2-light" class="light"></div>
+                        </div>
+                    </div>
+                    <button class="toggle-button" id="motor2-toggle">Motor 2</button>
+                    
+                </div>
+
+                <!-- Mixer -->
+                <div class="control-card">
+                    <span class="iconify device-icon" data-icon="mdi:blender" style="color: #2989c0;"></span>
+                    <div class="device-name">Mixer</div>
+                    <div class="light-indicator">
+                        <div class="light-wrapper">
+                            <div id="mixer-light" class="light"></div>
+                        </div>
+                    </div>
+                    <button class="toggle-button" id="mixer-toggle">Mixer</button>
+                 
+                </div>
+
+                <!-- Fan thông gió -->
+                <div class="control-card">
+                    <span class="iconify device-icon" data-icon="mdi:fan" style="color: #2989c0;"></span>
+                    <div class="device-name">Fan thông gió</div>
+                    <div class="light-indicator">
+                        <div class="light-wrapper">
+                            <div id="fan_thong_gio-light" class="light"></div>
+                        </div>
+                    </div>
+                    <button class="toggle-button" id="fan_thong_gio-toggle">Fan 1</button>
+                   
+                </div>
+
+                <!-- Fan hút nhiệt -->
+                <div class="control-card">
+                    <span class="iconify device-icon" data-icon="mdi:hvac" style="color: #2989c0;"></span>
+                    <div class="device-name">Fan hút nhiệt</div>
+                    <div class="light-indicator">
+                        <div class="light-wrapper">
+                            <div id="fan_hut_nhiet-light" class="light"></div>
+                        </div>
+                    </div>
+                    <button class="toggle-button" id="fan_hut_nhiet-toggle">Fan 2</button>
+                
+                </div>
+
+                <!-- Đèn sưởi -->
+                <div class="control-card">
+                    <span class="iconify device-icon" data-icon="mdi:lightbulb" style="color: #2989c0;"></span>
+                    <div class="device-name">Đèn sưởi</div>
+                    <div class="light-indicator">
+                        <div class="light-wrapper">
+                            <div id="den_suoi-light" class="light"></div>
+                        </div>
+                    </div>
+                    <button class="toggle-button" id="den_suoi-toggle">Đèn sưởi</button>
+                   
+                </div>
+                <div class="control-card">
+                    <span class="iconify device-icon" data-icon="mdi:alert-circle" style="color: #ff9800;"></span>
+                    <div class="device-name">Emergency</div>
+                    <div class="light-indicator">
+                        <div class="light-wrapper">
+                            <div id="emergency-light" class="light"></div>
+                        </div>
+                    </div>
+                    <button class="toggle-button" id="emergency-toggle">EMERGENCY</button>
+                    
+                </div>
+                <div class="control-card">
+                    <span class="iconify device-icon" data-icon="mdi:restart" style="color: #25b679;"></span>
+                    <div class="device-name">Reset</div>
+                    <div class="light-indicator">
+                        <div class="light-wrapper">
+                            <div id="reset-light" class="light"></div>
+                        </div>
+                    </div>
+                    <button class="toggle-button" id="reset-toggle">RESET</button>
+                    
+                </div>
+            </div>
+            
+        </div>
+
+            <!-- Khu vực hiển thị cảm biến -->
+            <div class="sensor-grid">
+                <div class="sensor-card">
+                    <div class="sensor-name">Nhiệt độ</div>
+                    <div class="circle-indicator">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="circle-bg" cx="50" cy="50" r="45"/>
+                            <circle class="circle-value" cx="50" cy="50" r="45" id="temp-circle"/>
+                        </svg>
+                        <div class="circle-text">
+                            <span id="temp-value">30</span><span class="circle-unit">°C</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sensor-card">
+                    <div class="sensor-name">Nồng độ EC</div>
+                    <div class="circle-indicator">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="circle-bg" cx="50" cy="50" r="45"/>
+                            <circle class="circle-value" cx="50" cy="50" r="45" id="ec-circle"/>
+                        </svg>
+                        <div class="circle-text">
+                            <span id="ec-value">2.5</span><span class="circle-unit">mS/cm</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sensor-card">
+                    <div class="sensor-name">Nồng độ pH</div>
+                    <div class="circle-indicator">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="circle-bg" cx="50" cy="50" r="45"/>
+                            <circle class="circle-value" cx="50" cy="50" r="45" id="ph-circle"/>
+                        </svg>
+                        <div class="circle-text">
+                            <span id="ph-value">6.5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Khu vực cài đặt -->
+        <div class="section-container" id="settings-section" style="display: none;">
+            <h3 class="section-title">Cài đặt</h3>
+            <div class="settings-container">
+                <div class="setting-row">
+                    <div class="setting-label">Cài đặt nhiệt độ</div>
+                    <input type="number" id="temp-setting" class="setting-input" value="30">
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">Cài đặt nồng độ EC</div>
+                    <input type="number" id="ec-setting" class="setting-input" value="2.5" step="0.1">
+                </div>
+                <div class="setting-row">
+                    <div class="setting-label">Cài đặt nồng độ pH</div>
+                    <input type="number" id="ph-setting" class="setting-input" value="6.5" step="0.1">
+                </div>
+                <button id="save-settings" class="submit-button">Lưu cài đặt</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching logic
+        document.getElementById('tab-control').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('tab-settings').classList.remove('active');
+            document.getElementById('control-section').style.display = 'block';
+            document.getElementById('settings-section').style.display = 'none';
+        });
+
+        document.getElementById('tab-settings').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('tab-control').classList.remove('active');
+            document.getElementById('control-section').style.display = 'none';
+            document.getElementById('settings-section').style.display = 'block';
+        });
+
+        // Danh sách các thiết bị
+        const devices = ["mode","motor1", "motor2", "mixer", "fan_thong_gio", "fan_hut_nhiet", "den_suoi","emergency","reset"];
+        
+        // Xử lý nút Mode
+        const modeToggle = document.getElementById('mode-toggle');
+        const modeText = document.getElementById('mode-text');
+
+        modeToggle.addEventListener('change', function() {
+            const state = this.checked;
+            const displayState = state ? "Auto" : "Manual";
+            modeText.textContent = displayState;
+            
+            // Gửi trạng thái lên server
+            fetch('/api/button-press', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ device: "mode", state: state })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    modeToggle.checked = !state;
+                    modeText.textContent = !state ? "Auto" : "Manual";
+                }
+            })
+            .catch(error => {
+                console.error('Error updating mode:', error);
+                modeToggle.checked = !state;
+                modeText.textContent = !state ? "Auto" : "Manual";
+            });
+        });
+        
+        // Gắn sự kiện cho tất cả các nút công tắc thiết bị
+        devices.forEach(device => {
+    const button = document.getElementById(`${device}-toggle`);
+    
+    if (button) {
+        button.addEventListener('click', function() {
+            const isActive = button.classList.contains('active');
+            const newState = !isActive;
+            
+            fetch('/api/button-press', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ device, state: newState })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.classList.toggle('active', newState);
+                }
+            })
+            .catch(error => {
+                console.error('Error updating state:', error);
+            });
+        });
+    }
+});
+
+        
+    function updateLights(
+        motor1Sate,
+        motor2Sate,
+        mixerSate,
+        fan1Sate,
+        fan2Sate,
+        den_suoiSate,
+        emergencyState,
+         resetState
+        ) 
+    {
+    const emergencyLight = document.getElementById("emergency-light");
+    const resetLight = document.getElementById("reset-light");
+    const motor1Light = document.getElementById("motor1-light");
+    const motor2Light = document.getElementById("motor2-light");
+    const mixerLight = document.getElementById("mixer-light");
+    const fan1Light = document.getElementById("fan_thong_gio-light");
+    const fan2Light = document.getElementById("fan_hut_nhiet-light");
+    const den_suoiLight = document.getElementById("den_suoi-light");
+    emergencyLight.style.backgroundColor = emergencyState ? "red" : "gray";
+    resetLight.style.backgroundColor = resetState ? "yellow" : "gray";
+    motor1Light.style.backgroundColor = motor1Sate ? "green" : "gray";
+    motor2Light.style.backgroundColor = motor2Sate ? "green" : "gray";
+    mixerLight.style.backgroundColor = mixerSate ? "green" : "gray";
+    fan1Light.style.backgroundColor = fan1Sate ? "green" : "gray";
+    fan2Light.style.backgroundColor = fan2Sate ? "green" : "gray";
+    den_suoiLight.style.backgroundColor = den_suoiSate ? "green" : "gray";
+}
+
+// Hàm cập nhật trạng thái đèn từ PLC mỗi giây
+function fetchPLCStatus() {
+    fetch('/api/plc-status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateLights(
+                data.data.Motor1_Btn, 
+                data.data.Motor2_Btn,
+                data.data.Mixer_Btn,
+                data.data.Fan_thong_gio_Btn,
+                data.data.Fan_hut_nhiet_Btn,
+                data.data.Den_suoi_Btn,
+                data.data.Emergency_Btn, 
+                data.data.Reset_Btn);
+            }
+        })
+        .catch(error => console.error("❌ Lỗi khi lấy trạng thái PLC:", error));
+}
+
+// Gọi API mỗi giây để cập nhật trạng thái đèn
+setInterval(fetchPLCStatus, 1000);
+
+        // Cập nhật hiển thị trạng thái
+        function updateStatusDisplay(device, state) {
+            const statusElement = document.getElementById(`status-${device}`);
+            if (statusElement) {
+                statusElement.textContent = state;
+                
+                // Thay đổi lớp CSS dựa trên trạng thái
+                statusElement.className = "status-label";
+                if (state === "ON") {
+                    statusElement.classList.add("status-on");
+                } else if (state === "OFF") {
+                    statusElement.classList.add("status-off");
+                } else if (state === "AUTO") {
+                    statusElement.classList.add("status-auto");
+                } else if (state === "MANU") {
+                    statusElement.classList.add("status-manu");
+                }
+            }
+        }
+
+        // Cập nhật hiển thị các cảm biến
+        function updateSensorDisplay(temp, ec, ph) {
+            // Cập nhật giá trị
+            document.getElementById('temp-value').textContent = temp;
+            document.getElementById('ec-value').textContent = ec;
+            document.getElementById('ph-value').textContent = ph;
+            
+            // Cập nhật vòng tròn - giá trị ví dụ
+            const tempCircle = document.getElementById('temp-circle');
+            const ecCircle = document.getElementById('ec-circle');
+            const phCircle = document.getElementById('ph-circle');
+            
+            // Tính toán giá trị hiển thị (đây là ví dụ, bạn có thể điều chỉnh theo thang đo thực tế)
+            const tempPercentage = Math.min(100, Math.max(0, temp / 50 * 100));
+            const ecPercentage = Math.min(100, Math.max(0, ec / 5 * 100));
+            const phPercentage = Math.min(100, Math.max(0, (ph - 4) / 10 * 100));
+            
+            // Cập nhật stroke-dashoffset (283 là chu vi của vòng tròn với bán kính 45)
+            tempCircle.style.strokeDashoffset = 283 - (283 * tempPercentage / 100);
+            ecCircle.style.strokeDashoffset = 283 - (283 * ecPercentage / 100);
+            phCircle.style.strokeDashoffset = 283 - (283 * phPercentage / 100);
+            
+            // Thay đổi màu dựa vào giá trị
+            tempCircle.style.stroke = temp > 35 ? '#ff5722' : '#2989c0';
+            ecCircle.style.stroke = ec > 4 ? '#ff9800' : '#2989c0';
+            phCircle.style.stroke = (ph < 5.5 || ph > 7.5) ? '#ff9800' : '#25b679';
+        }
+        
+        // Xử lý nút lưu cài đặt
+        document.getElementById('save-settings').addEventListener('click', function() {
+            const tempSetting = document.getElementById('temp-setting').value;
+            const ecSetting = document.getElementById('ec-setting').value;
+            const phSetting = document.getElementById('ph-setting').value;
+            
+            // Gửi cài đặt lên server (giả định API)
+            fetch('/api/update-settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    temperature: tempSetting,
+                    ec: ecSetting,
+                    ph: phSetting
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Đã lưu cài đặt thành công!');
+                    // Cập nhật hiển thị
+                    updateSensorDisplay(tempSetting, ecSetting, phSetting);
+                } else {
+                    alert('Lỗi khi lưu cài đặt: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving settings:', error);
+                alert('Lỗi khi lưu cài đặt. Vui lòng thử lại sau.');
+            });
+        });
+        
+        // Cập nhật UI từ dữ liệu PLC
+        function updateUIFromPLC(data) {
+            // Map giữa tên thiết bị trong HTML và tên trong dữ liệu PLC
+            const deviceMapping = {
+                "mode": "Mode_Btn",
+                "motor1": "Motor1_Btn",
+                "motor2": "Motor2_Btn",
+                "mixer": "Mixer_Btn",
+                "fan_thong_gio": "Fan_thong_gio_Btn",
+                "fan_hut_nhiet": "Fan_hut_nhiet_Btn",
+                "den_suoi": "Đèn_sưởi_Btn",
+                "emergency-light":"Emergency"
+            };
+            
+            // Cập nhật Mode trước
+            if (data[deviceMapping["mode"]] !== undefined) {
+                const modeState = data[deviceMapping["mode"]];
+                modeToggle.checked = modeState;
+                modeText.textContent = modeState ? "Auto" : "Manual";
+            }
+            
+            // Cập nhật các thiết bị khác
+            devices.forEach(device => {
+                if (device === "mode") return; // Đã xử lý ở trên
+                
+                const plcProperty = deviceMapping[device];
+                if (data[plcProperty] !== undefined) {
+                    let state = data[plcProperty] ? "ON" : "OFF";
+                    
+                    const toggleCheckbox = document.getElementById(`${device}-toggle`);
+                    if (toggleCheckbox) toggleCheckbox.checked = data[plcProperty];
+                    
+                    // Cập nhật hiển thị trạng thái
+                    updateStatusDisplay(device, state);
+                }
+            });
+        }
+        
+        // WebSocket connection - Kết nối websocket để cập nhật liên tục
+        function connectWebSocket() {
+            const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+            const socket = new WebSocket(`${protocol}${window.location.host}`);
+            socket.onmessage = (event) => {
+                try {
+                    const message = JSON.parse(event.data);
+                    if (message.type === 'status') updateUIFromPLC(message.data);
+                } catch (error) {
+                    console.error('Error processing message:', error);
+                }
+            };
+            socket.onclose = () => setTimeout(connectWebSocket, 1000);
+        }
+        connectWebSocket();
+
+        // Lấy trạng thái ban đầu khi trang vừa tải
+        fetch('/api/plc-status')
+            .then(response => response.json())
+            .then(data => { 
+                if (data.success) updateUIFromPLC(data.data); 
+            })
+            .catch(error => console.error('Error fetching initial state:', error));
+    </script>
+</body>
+</html>
